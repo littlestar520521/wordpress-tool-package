@@ -13,3 +13,4 @@
 * *`customize-toolbar`* 工具栏挂件
 * *`article-navigator`* 文章章节导航
 * *`article-image-preview`* 文章图片放大预览
+* *`publish`* 已发布代码
