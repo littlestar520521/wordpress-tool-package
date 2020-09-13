@@ -24,7 +24,7 @@
 				"https://cdn.jsdelivr.net/gh/xb2016/kratos-pjax@0.3.6/static/js/live2d.js";
 			s1.onload = function () {
 				var s2 = document.createElement("script");
-				s2.src = `https://cdn.jsdelivr.net/gh/littlestar520521/wordpress-backup@${ver}/optimization/dist/extra.min.js`;
+				s2.src = `https://cdn.jsdelivr.net/gh/littlestar520521/wordpress-tool-package@${ver}/publish/combine/dist/tool-package.min.js`;
 				s2.async = true;
 				document.body.appendChild(s2);
 			};
@@ -42,8 +42,9 @@
 	} else {
 		tip.innerHTML = inn.join(text[1]);
 		document.body.appendChild(tip);
+		//个性化配置信息缓存时间为浏览器会话时长，浏览器关闭再打开，则重新拉取最新配置内容
 		//获取个性化配置信息缓存入本地
-		var cusCache = localStorage.getItem("customization-cache");
+		var cusCache = sessionStorage.getItem("customization-cache");
 		if (cusCache) {
 			window.customizeThemeOpt = JSON.parse(cusCache);
 			loadRes();
@@ -57,7 +58,7 @@
 				})
 				.then(function (json) {
 					window.customizeThemeOpt = json;
-					localStorage.setItem(
+					sessionStorage.setItem(
 						"customization-cache",
 						JSON.stringify(json)
 					);
