@@ -45,7 +45,7 @@ body.customize-wallpaper-bg-end {
 	}
 }
 div[id^="customize-toolbar"] {
-	transition: all 1s linear;
+	transition: bottom 1s linear;
 	position: fixed;
 	width: 200px;
 	height: 200px;
@@ -57,17 +57,17 @@ div[id^="customize-toolbar"] {
 	/*follow the theme: aaa or eee*/
 	--tb-bg-blank-color: unset;
 }
-/*hode whole toolbar*/
-div[id^="customize-toolbar"].customize-toolbar-hide-all {
+/*hide whole toolbar*/
+div[id^="customize-toolbar"].customize-toolbar-all-hide {
 	--tb-bottom: calc(100vh - 25px);
 }
 /*hide menu tip*/
-.customize-toolbar-hide {
+.customize-toolbar-menu-hide {
 	opacity: 0;
 	transform: translateX(10px);
 }
 /*hide toolbar tip*/
-.customize-toolbar-hide-tip {
+.customize-toolbar-tip-hide {
 	transform: translateY(205px);
 	opacity: 0;
 }
@@ -95,11 +95,11 @@ div[id^="customize-toolbar"].customize-toolbar-hide-all {
 	position: absolute;
 	bottom: var(--tb-dot-bottom);
 	left: 100px;
-	transition: all 1s linear;
+	transition: bottom 1s linear;
 }
 .customize-toolbar-topdot {
 	position: absolute;
-	left: 97px;
+	left: 96px;
 	bottom: var(--tb-dot-bottom);
 	width: 8px;
 	height: 8px;

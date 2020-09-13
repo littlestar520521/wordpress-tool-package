@@ -15,13 +15,12 @@ const THEME_OPT = {
 		//lightpink
 		"bg-hover-color": "#ffb6c1",
 		"bg-img-css":
-			"url(https://wp-cdn.bozaiq.cn/uni/images/backgrounds/classical/38692245e2399f647d0eea3fa8d2647c.png)",
+			"url(../../../Assets/38692245e2399f647d0eea3fa8d2647c.png)",
 		"bg-pattern-color": ["#eee", "#aaa"],
 	},
 	siteTheme: {
 		dayTheme: {
-			image:
-				"https://wp-cdn.bozaiq.cn/uni/images/inserts/2c9883c0c3d7b75e0a3feee8354ddd9b_optimized.png",
+			image: "",
 			css: {
 				//wp小工具背景色
 				"--widget-bg-color": "rgba(250,250,250,0.8)",
@@ -40,8 +39,7 @@ const THEME_OPT = {
 			},
 		},
 		nightTheme: {
-			image:
-				"https://wp-cdn.bozaiq.cn/uni/images/inserts/56f8dc7323d843977ec483846d01be74.png",
+			image: "",
 			css: {
 				//wp小工具背景色
 				"--widget-bg-color": "#333",
@@ -61,8 +59,8 @@ const THEME_OPT = {
 		},
 	},
 	bgm: {
-		url: "https://wp-cdn.bozaiq.cn/uni/sounds/snowdream_202051324111.mp3",
-		length: 293,
+		url: "",
+		length: 0,
 	},
 	bingImageApi: {
 		url: "https://www.littlemeteor.me/api/bingwallpaper",
@@ -94,10 +92,11 @@ var t = {
 		 * visibility class
 		 */
 		v: {
-			toolBarHide: "customize-toolbar-hide-all",
-			menuHide: "customize-toolbar-hide",
+			toolBarHide: "customize-toolbar-all-hide",
+			menuHide: "customize-toolbar-menu-hide",
 			iconClick: "customize-toolbar-icon-clicking",
 			maskHide: "customize-toolbar-window-mask-hide",
+			tipHide: "customize-toolbar-tip-hide",
 		},
 		/**
 		 * rotation class
@@ -182,7 +181,7 @@ var t = {
 	 * toggle css class
 	 * @param {Element} d dom
 	 * @param {string} c class name
-	 * @param {boolean} r confirm remove class?
+	 * @param {boolean} r confirm remove class? true=remove, false=add
 	 */
 	toggleCssClass(d, c, r) {
 		r ? d.classList.remove(c) : d.classList.add(c);
@@ -193,13 +192,13 @@ var t = {
 	 * @param {string} t2 console log
 	 */
 	popErrorLog(t1, t2) {
-		var l = this.getDom(".customize-toolbar-blank-tip>div");
+		var l = this.getDom(t.d.e);
 		l.innerHTML = t1;
-		l.classList.remove("customize-toolbar-hide-tip");
+		l.classList.remove(t.c.v.tipHide);
 		this.switchPicAnimation(true); //stop pic rotation
 		console.error(t2);
 		setTimeout(function () {
-			l.classList.add("customize-toolbar-hide-tip");
+			l.classList.add(t.c.v.tipHide);
 		}, 3000);
 	},
 	/**
@@ -346,7 +345,11 @@ var t = {
 	},
 };
 var au = t.getDom(t.d.b.bgmControlButton),
-	tb = t.getDom(t.d.t, true),
+	/*
+	 *	pro env:
+	 *	tb = t.getDom(t.d.t, true),
+	 */
+	tb = t.getDom("customize-toolbar", true),
 	s = t.getDom(t.d.b.shiftThemeButton),
 	si = s.getElementsByTagName("i")[0],
 	a = document.createElement("audio");
@@ -363,7 +366,7 @@ t.getDom(t.d.b.backToTopButton).addEventListener("click", function () {
 	window.scrollTo({ top: 0, behavior: "smooth" });
 });
 t.getDom(t.d.b.closeMenuButton).addEventListener("click", function () {
-	t.getDom(t.d.m).classList.add(t.c.v.menuHide);
+	t.toggleCssClass(t.getDom(t.d.m), t.c.v.menuHide, false);
 });
 t.getDom(t.d.b.bingImageButton).addEventListener("click", function () {
 	document.body.style.backgroundImage
@@ -375,12 +378,19 @@ t.getDom(t.d.a).addEventListener("click", function (e) {
 	t.getDom(t.d.m).classList.toggle(t.c.v.menuHide);
 });
 window.addEventListener("load", function () {
-	t.getDom(t.d.m).classList.toggle(t.c.v.menuHide);
-	var l = t.getDom(".customize-toolbar-blank-tip>div");
-	l.classList.remove("customize-toolbar-hide-tip");
+	//add toolbar move effect: from top to bottom
+	t.toggleCssClass(tb, t.c.v.toolBarHide, true);
 	setTimeout(function () {
-		l.classList.add("customize-toolbar-hide-tip");
-	}, 10000);
+		//show the menu
+		t.toggleCssClass(t.getDom(t.d.m), t.c.v.menuHide, true);
+		//show the tip
+		var l = t.getDom(t.d.e);
+		t.toggleCssClass(l, t.c.v.tipHide, true);
+		//close tip after 5s
+		setTimeout(function () {
+			t.toggleCssClass(l, t.c.v.tipHide, false);
+		}, 5000);
+	}, 1000);
 });
 s.addEventListener("click", function () {
 	var b = document.body;
@@ -423,7 +433,9 @@ document.body.appendChild(a);
 //set toolbar appearance
 //set site appearance
 Object.keys(THEME_OPT.toolbarTheme).forEach(function (cssKey) {
-	tb.style.setProperty("--tb-" + cssKey, THEME_OPT.toolbarTheme[cssKey]);
+	if (cssKey !== "bg-pattern-color") {
+		tb.style.setProperty("--tb-" + cssKey, THEME_OPT.toolbarTheme[cssKey]);
+	}
 });
 //get user preferred theme, if it exists, then use the preferred option
 var pt = localStorage.getItem("preferred-theme");
@@ -437,10 +449,10 @@ if (hour >= 6 && hour <= 18) {
 		t.setSiteTheme(1, document.body);
 		t.setToolbarTheme(1, si, s, tb);
 	}
-	t.getDom("day-night-theme-image", true).setAttribute(
-		"src",
-		THEME_OPT.siteTheme.dayTheme.image
-	);
+	/*
+	 * pro env:
+	 *	t.getDom("day-night-theme-image", true).setAttribute("src",THEME_OPT.siteTheme.dayTheme.image);
+	 */
 	t.getDom(t.d.a)
 		.getElementsByTagName("i")[0]
 		.setAttribute("class", t.c.i.dayBg);
@@ -454,10 +466,10 @@ else {
 		t.setSiteTheme(0, document.body);
 		t.setToolbarTheme(0, si, s, tb);
 	}
-	t.getDom("day-night-theme-image", true).setAttribute(
-		"src",
-		THEME_OPT.siteTheme.nightTheme.image
-	);
+	/*
+	 * pro env:
+	 *	t.getDom("day-night-theme-image", true).setAttribute("src",THEME_OPT.siteTheme.nightTheme.image);
+	 */
 	t.getDom(t.d.a)
 		.getElementsByTagName("i")[0]
 		.setAttribute("class", t.c.i.nightBgAndIcon);

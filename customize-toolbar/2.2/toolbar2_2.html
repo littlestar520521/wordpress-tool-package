@@ -10,18 +10,49 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>WordPress页边工具栏V2.2</title>
+		<link href="toolbar2_2.css" rel="stylesheet" />
+		<link
+			href="../../includes/font-awesome-4.7.0/css/font-awesome.min.css"
+			rel="stylesheet"
+		/>
+		<style>
+			html,
+			body,
+			div,
+			span,
+			img,
+			i,
+			a {
+				margin: 0;
+				padding: 0;
+			}
+			a {
+				text-decoration: none;
+			}
+			body {
+				background: url(../../../Assets/2020-09-03-183452.jpg) no-repeat
+					center;
+				background-attachment: fixed;
+				background-size: cover;
+			}
+		</style>
 	</head>
 	<body>
-		<div id="toolbar-customize">
+		<div id="customize-toolbar" class="customize-toolbar-all-hide">
 			<div class="customize-toolbar-pic">
 				<div class="customize-toolbar-topline"></div>
 				<div class="customize-toolbar-topdot"></div>
 				<div class="customize-toolbar-core"></div>
 			</div>
 			<div class="customize-toolbar-menu">
-				<div class="customize-toolbar-icon-set customize-toolbar-hide">
+				<div
+					class="customize-toolbar-icon-set customize-toolbar-menu-hide"
+				>
 					<!--切换Bing壁纸start-->
-					<div class="customize-toolbar-icon" data-func="bing-wallpaper">
+					<div
+						class="customize-toolbar-icon"
+						data-func="bing-wallpaper"
+					>
 						<div
 							class="customize-toolbar-icon-func"
 							aria-label="change background image to today’s bing image"
@@ -37,7 +68,10 @@
 					</div>
 					<!--切换Bing壁纸end-->
 					<!--背景音乐start-->
-					<div class="customize-toolbar-icon" data-func="bgm-controller">
+					<div
+						class="customize-toolbar-icon"
+						data-func="bgm-controller"
+					>
 						<div
 							class="customize-toolbar-icon-func"
 							aria-label="play or pause the BGM"
@@ -91,12 +125,13 @@
 						<i class="" aria-hidden="true"></i>
 					</div>
 					<div class="customize-toolbar-blank-tip">
-						<div class="customize-toolbar-hide-tip">
+						<div class="customize-toolbar-tip-hide">
 							<div>单击收起/展开菜单</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<script src="toolbar2_2.js"></script>
 	</body>
 </html>
