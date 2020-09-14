@@ -92,7 +92,10 @@ var t = {
 		 * visibility class
 		 */
 		v: {
-			toolBarHide: "customize-toolbar-all-hide",
+			toolBarHide: [
+				"customize-toolbar-all-hide",
+				"customize-toolbar-all-hide-85",
+			],
 			menuHide: "customize-toolbar-menu-hide",
 			iconClick: "customize-toolbar-icon-clicking",
 			maskHide: "customize-toolbar-window-mask-hide",
@@ -114,6 +117,8 @@ var t = {
 			nightBgAndIcon: "fa fa-star",
 			bgmPlay: "fa fa-play",
 			bgmPause: "fa fa-pause",
+			closeTb: "fa fa-angle-up",
+			showTb: "fa fa-angle-down",
 		},
 		/**
 		 * wallpaper class
@@ -157,9 +162,9 @@ var t = {
 		 */
 		p: ".customize-toolbar-core",
 		/**
-		 * blank area dom
+		 * blank area bg dom
 		 */
-		a: ".customize-toolbar-blank",
+		a: ".customize-toolbar-blank-bg",
 		/**
 		 * menu dom
 		 */
@@ -168,6 +173,10 @@ var t = {
 		 * pop tip dom
 		 */
 		e: ".customize-toolbar-blank-tip>div",
+		/**
+		 * close toolbar botton
+		 */
+		c: ".customize-toolbar-bottom-close",
 	},
 	/**
 	 * Get Dom
@@ -350,6 +359,7 @@ var au = t.getDom(t.d.b.bgmControlButton),
 	 *	tb = t.getDom(t.d.t, true),
 	 */
 	tb = t.getDom("customize-toolbar", true),
+	m = t.getDom(t.d.m),
 	s = t.getDom(t.d.b.shiftThemeButton),
 	si = s.getElementsByTagName("i")[0],
 	a = document.createElement("audio");
@@ -366,7 +376,7 @@ t.getDom(t.d.b.backToTopButton).addEventListener("click", function () {
 	window.scrollTo({ top: 0, behavior: "smooth" });
 });
 t.getDom(t.d.b.closeMenuButton).addEventListener("click", function () {
-	t.toggleCssClass(t.getDom(t.d.m), t.c.v.menuHide, false);
+	m.classList.add(t.c.v.menuHide);
 });
 t.getDom(t.d.b.bingImageButton).addEventListener("click", function () {
 	document.body.style.backgroundImage
@@ -377,18 +387,50 @@ t.getDom(t.d.a).addEventListener("click", function (e) {
 	e.stopPropagation();
 	t.getDom(t.d.m).classList.toggle(t.c.v.menuHide);
 });
+t.getDom(t.d.c).addEventListener("click", function () {
+	//if toolbar is hidden, then show it
+	var _this = this,
+		h = document.documentElement.scrollTop;
+	if (
+		tb.classList.contains(t.c.v.toolBarHide[0]) ||
+		tb.classList.contains(t.c.v.toolBarHide[1])
+	) {
+		tb.classList.remove(t.c.v.toolBarHide[0], t.c.v.toolBarHide[1]);
+		setTimeout(function () {
+			_this
+				.getElementsByTagName("i")[0]
+				.setAttribute("class", t.c.i.closeTb);
+		}, 1000);
+	}
+	//if toolbar is shown, then close it
+	else {
+		if (m.classList.contains(t.c.v.menuHide)) {
+			h <= 85
+				? tb.classList.add(t.c.v.toolBarHide[0])
+				: tb.classList.add(t.c.v.toolBarHide[1]);
+		} else {
+			m.classList.add(t.c.v.menuHide);
+			setTimeout(function () {
+				h <= 85
+					? tb.classList.add(t.c.v.toolBarHide[0])
+					: tb.classList.add(t.c.v.toolBarHide[1]);
+			}, 500);
+		}
+		_this.getElementsByTagName("i")[0].setAttribute("class", t.c.i.showTb);
+	}
+});
 window.addEventListener("load", function () {
 	//add toolbar move effect: from top to bottom
-	t.toggleCssClass(tb, t.c.v.toolBarHide, true);
+	tb.classList.remove(t.c.v.toolBarHide[0]);
 	setTimeout(function () {
 		//show the menu
-		t.toggleCssClass(t.getDom(t.d.m), t.c.v.menuHide, true);
+		m.classList.remove(t.c.v.menuHide);
 		//show the tip
 		var l = t.getDom(t.d.e);
-		t.toggleCssClass(l, t.c.v.tipHide, true);
+		l.classList.remove(t.c.v.tipHide);
 		//close tip after 5s
 		setTimeout(function () {
-			t.toggleCssClass(l, t.c.v.tipHide, false);
+			l.classList.add(t.c.v.tipHide);
 		}, 5000);
 	}, 1000);
 });
