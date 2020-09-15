@@ -1,6 +1,6 @@
 /**
  * wp工具包系列：额外功能加载
- * 功能1：右下角工具栏挂件，开发者：我自己，版本：2.1.2
+ * 功能1：右下角工具栏挂件，开发者：我自己，版本：2.2
  * 功能2：左下角Live2D动画，开发者：moedog.org，版本：1.7
  */
 /**
@@ -38,198 +38,304 @@ var resLoaders = {
  * 工具栏挂件
  */
 (function (op) {
-	var tb_html =
-			'<div class="customize-toolbar-pic"><div class="customize-toolbar-topline"></div><div class="customize-toolbar-topdot"></div><div class="customize-toolbar-core"></div></div><div class="customize-toolbar-menu"><div class="customize-toolbar-icon-set customize-toolbar-hide"><div class="customize-toolbar-icon" data-func="bing-wallpaper"><div class="customize-toolbar-icon-func" aria-label="change background image to today’s bing image"><i class="fa fa-paint-brush" aria-hidden="false"></i></div><div class="customize-toolbar-icon-tip">更换壁纸为Bing美图</div></div><div class="customize-toolbar-icon" data-func="bgm-controller"><div class="customize-toolbar-icon-func" aria-label="play or pause the BGM"><i class="fa fa-play" aria-hidden="false"></i></div><div class="customize-toolbar-icon-tip">播放背景音乐</div></div><div class="customize-toolbar-icon" data-func="shift-theme"><div class="customize-toolbar-icon-func" aria-label="use day or night theme"><i class="" aria-hidden="false"></i></div><div class="customize-toolbar-icon-tip"></div></div><div class="customize-toolbar-icon" data-func="back-to-top"><div class="customize-toolbar-icon-func" aria-label="go back to the top"><i class="fa fa-arrow-up" aria-hidden="false"></i></div><div class="customize-toolbar-icon-tip">返回顶部</div></div><div class="customize-toolbar-icon" data-func="hide-menu"><div class="customize-toolbar-icon-func" aria-label="close the menu"><i class="fa fa-angle-right" aria-hidden="false"></i></div><div class="customize-toolbar-icon-tip">隐藏菜单</div></div></div><div class="customize-toolbar-blank"><div class="customize-toolbar-blank-bg"><i class="" aria-hidden="true"></i></div><div class="customize-toolbar-blank-tip"><div class="customize-toolbar-hide-tip"><div>单击收起/展开菜单</div></div></div></div></div>',
+	var tb_html = `<div class="customize-toolbar-pic"><div class="customize-toolbar-topline"></div><div class="customize-toolbar-topdot"></div><div class="customize-toolbar-core"></div></div><div class="customize-toolbar-menu"><div class="customize-toolbar-icon-set customize-toolbar-menu-hide"><div class="customize-toolbar-icon" data-func="bing-wallpaper"><div class="customize-toolbar-icon-func"><i class="fa fa-paint-brush" aria-hidden="false"></i></div><div class="customize-toolbar-icon-tip">更换壁纸为Bing美图</div></div><div class="customize-toolbar-icon" data-func="bgm-controller"><div class="customize-toolbar-icon-func"><i class="fa fa-play" aria-hidden="false"></i></div><div class="customize-toolbar-icon-tip">播放背景音乐</div></div><div class="customize-toolbar-icon" data-func="shift-theme"><div class="customize-toolbar-icon-func"><i class="" aria-hidden="false"></i></div><div class="customize-toolbar-icon-tip"></div></div><div class="customize-toolbar-icon" data-func="back-to-top"><div class="customize-toolbar-icon-func"><i class="fa fa-arrow-up" aria-hidden="false"></i></div><div class="customize-toolbar-icon-tip">返回顶部</div></div><div class="customize-toolbar-icon" data-func="hide-menu"><div class="customize-toolbar-icon-func"><i class="fa fa-angle-right" aria-hidden="false"></i></div><div class="customize-toolbar-icon-tip">隐藏菜单</div></div></div></div><div class="customize-toolbar-blank"><div class="customize-toolbar-blank-bg"><div><i class="" aria-hidden="true"></i></div></div><div class="customize-toolbar-blank-tip"><div class="customize-toolbar-tip-hide"><div>单击收起/展开菜单</div></div></div><div class="customize-toolbar-bottom-close"><div><i class="fa fa-angle-down" aria-hidden="false"></i></div></div></div>`,
 		tb_css =
-			"body.customize-wallpaper-bg-start{background-position-x:100vw}body.customize-wallpaper-bg-end{background-position-x:center}div[id^=customize-toolbar]{transition:all .5s linear;position:fixed;width:200px;height:200px;bottom:2px;right:-2px;opacity:1;--tb-bottom:162px}.customize-toolbar-icon-func.customize-toolbar-icon-clicking i{text-shadow:0 0 2px #666}.customize-toolbar-pic-move{animation:rotate-y 4s linear infinite normal;transform-origin:50% 50%}.customize-toolbar-hide{opacity:0;transform:translateX(10px)}.customize-toolbar-hide-all{right:-160px}.customize-toolbar-hide-tip{transform:translateY(205px);opacity:0}.customize-toolbar-pic-bg-move{animation:rotate-own 4s linear infinite normal;transform-origin:50% 50%}@keyframes rotate-y{0%{transform:rotateY(0)}25%{transform:rotateY(90deg)}50%{transform:rotateY(180deg)}75%{transform:rotateY(270deg)}100%{transform:rotateY(360deg)}}@keyframes rotate-own{0%{transform:rotate(0)}25%{transform:rotate(90deg)}50%{transform:rotate(180deg)}75%{transform:rotate(270deg)}100%{transform:rotate(360deg)}}.customize-toolbar-core{background-image:var(--tb-bg-img-css);background-repeat:no-repeat;background-position:center;background-size:cover;width:160px;height:160px;margin:20px}.customize-toolbar-topline{width:2px;height:calc(100vh - var(--tb-bottom));background:#000;position:absolute;bottom:var(--tb-bottom);left:100px}.customize-toolbar-topdot{position:absolute;left:96.5px;bottom:var(--tb-bottom);width:8px;height:8px;background-color:var(--tb-font-color);border:1px solid #000;border-radius:50%;z-index:2}.customize-toolbar-menu{position:absolute;width:250px;height:250px;top:-50px;left:-50px;display:flex;justify-content:flex-end;align-items:flex-end;border-radius:50%}.customize-toolbar-icon-set{position:inherit;left:0;width:150px;height:250px;display:flex;flex-direction:column;justify-content:space-between;align-items:center;transition:all .5s linear;bottom:0}.customize-toolbar-icon{position:relative;border-radius:50%}.customize-toolbar-icon i{text-shadow:1px 1px 1px #666;cursor:pointer!important}.customize-toolbar-icon:nth-child(1){right:-60px;top:5px}.customize-toolbar-icon:nth-child(2){right:30px}.customize-toolbar-icon:nth-child(3){right:55px}.customize-toolbar-icon:nth-child(4){right:55px}.customize-toolbar-icon:nth-child(5){right:30px}.customize-toolbar-icon:nth-child(5) i{font-weight:700}.customize-toolbar-icon-func,.customize-toolbar-icon-tip{color:var(--tb-font-color);border-color:var(--tb-border-shadow-color);background:var(--tb-bg-color);box-sizing:border-box;border-style:solid;transition:all .5s linear}.customize-toolbar-icon-func{width:30px;height:30px;border-width:2px;border-radius:50%;line-height:26px;text-align:center;box-shadow:0 0 5px var(--tb-border-shadow-color);cursor:pointer!important}.customize-toolbar-icon-func.customize-toolbar-icon-clicking,.customize-toolbar-icon-func:hover{background:var(--tb-bg-hover-color);color:var(--tb-bg-color)}.customize-toolbar-icon-func:hover+.customize-toolbar-icon-tip{opacity:1;right:40px}.customize-toolbar-icon-tip{right:100px;bottom:0;position:absolute;white-space:nowrap;font-size:.85rem;line-height:28px;padding:0 8px;font-family:Calibri,sans-serif;letter-spacing:.5px;border-radius:5px;border-width:1px;transform:none;box-shadow:0 0 6px #333;opacity:0}.customize-toolbar-icon:nth-child(1) .customize-toolbar-icon-tip{border-top-left-radius:15px}.customize-toolbar-icon:nth-child(5) .customize-toolbar-icon-tip{border-bottom-left-radius:15px}.customize-toolbar-blank{width:200px;height:200px;background:rgba(255,255,255,.2);border-radius:50%;box-shadow:0 0 10px #fff;position:relative}.customize-toolbar-blank>div{width:inherit;height:inherit;position:inherit}.customize-toolbar-blank-bg{font-size:170px;text-align:center;line-height:200px;color:#ffffe0;opacity:.5;z-index:-1}.customize-toolbar-blank-tip{top:-200px;text-align:center}.customize-toolbar-blank-tip>div{display:inline-block;padding:10px;background:#333;color:#eee;border-radius:10px;font-size:.85rem;box-shadow:0 0 5px gray;transition:all 1s linear;position:relative;z-index:2}.customize-toolbar-blank:hover i{animation:rotate-own 4s linear infinite normal}.customize-toolbar-window-mask{position:fixed;height:100%;width:100%;top:0;left:0;z-index:150;background:rgba(128,128,128,.9);color:#333}.customize-toolbar-window-mask>div{position:relative;top:calc(50% - 62px);left:calc(50% - 100px);background:#ccc;width:200px;height:124px;border-radius:10px;box-shadow:0 0 10px #444;display:flex;flex-direction:column;justify-content:center;text-align:center}.customize-toolbar-window-mask-hide{display:none}@media (max-width:800px){div[id^=customize-toolbar]{display:none}}";
+			"body.customize-wallpaper-bg-start{background-position-x:100vw}body.customize-wallpaper-bg-end{background-position-x:center}@keyframes rotate-y{0%{transform:rotateY(0)}25%{transform:rotateY(90deg)}50%{transform:rotateY(180deg)}75%{transform:rotateY(270deg)}100%{transform:rotateY(360deg)}}@keyframes rotate-own{0%{transform:rotate(0)}25%{transform:rotate(90deg)}50%{transform:rotate(180deg)}75%{transform:rotate(270deg)}100%{transform:rotate(360deg)}}div[id^=customize-toolbar]{transition:bottom 1s linear;position:fixed;width:200px;height:200px;bottom:calc(var(--tb-bottom));right:-2px;opacity:1;z-index:105;--tb-bottom:2px;--tb-dot-bottom:160px;--tb-bg-blank-color:unset}div[id^=customize-toolbar].customize-toolbar-all-hide{--tb-bottom:calc(100vh - 20px)}div[id^=customize-toolbar].customize-toolbar-all-hide-85{--tb-bottom:calc(100vh - 105px)}.customize-toolbar-menu-hide{opacity:0;transform:translateX(10px)}.customize-toolbar-blank-tip>div.customize-toolbar-tip-hide{transform:translateY(205px);opacity:0}.customize-toolbar-pic-move{animation:rotate-y 4s linear infinite normal;transform-origin:50% 50%}.customize-toolbar-pic-bg-move{animation:rotate-own 4s linear infinite normal;transform-origin:50% 50%}.customize-toolbar-core{background-image:var(--tb-bg-img-css);background-repeat:no-repeat;background-position:center;background-size:cover;width:160px;height:160px;margin:20px}.customize-toolbar-topline{width:2px;height:calc(100vh - var(--tb-bottom) - 160px);background:#000;position:absolute;bottom:var(--tb-dot-bottom);left:100px;transition:height 1s linear}.customize-toolbar-topdot{position:absolute;left:96px;bottom:var(--tb-dot-bottom);width:8px;height:8px;background-color:var(--tb-font-color);border:1px solid #000;border-radius:50%;z-index:2;box-sizing:content-box}.customize-toolbar-menu{position:absolute;width:100px;height:250px;top:-50px;left:-50px}.customize-toolbar-icon-set{width:inherit;height:inherit;display:flex;flex-direction:column;justify-content:space-between;align-items:center;transition:all .5s linear}.customize-toolbar-icon{position:relative;border-radius:50%}.customize-toolbar-icon i{text-shadow:1px 1px 1px #666;cursor:pointer!important}.customize-toolbar-icon:nth-child(1){right:-50px;top:12px}.customize-toolbar-icon:nth-child(2){right:6px}.customize-toolbar-icon:nth-child(3){right:30px}.customize-toolbar-icon:nth-child(4){right:30px}.customize-toolbar-icon:nth-child(5){right:3px}.customize-toolbar-bottom-close i,.customize-toolbar-icon:nth-child(5) i{font-weight:700}.customize-toolbar-icon-func,.customize-toolbar-icon-tip{color:var(--tb-font-color);border-color:var(--tb-border-shadow-color);background:var(--tb-bg-color);border-style:solid;transition:all .5s linear;box-sizing:content-box}.customize-toolbar-icon-func{width:30px;height:30px;border-width:2px;border-radius:50%;line-height:30px;text-align:center;box-shadow:0 0 5px var(--tb-border-shadow-color);cursor:pointer!important;font-size:1.1rem}.customize-toolbar-icon-func.customize-toolbar-icon-clicking i{text-shadow:0 0 2px #666}.customize-toolbar-icon-func.customize-toolbar-icon-clicking,.customize-toolbar-icon-func:hover{background:var(--tb-bg-hover-color);color:var(--tb-bg-color)}.customize-toolbar-icon-func:hover+.customize-toolbar-icon-tip{opacity:1;right:40px}.customize-toolbar-icon-tip{right:100px;bottom:0;position:absolute;white-space:nowrap;font-size:.85rem;line-height:28px;padding:0 8px;font-family:Calibri,sans-serif;letter-spacing:.5px;border-radius:5px;border-width:1px;transform:none;box-shadow:0 0 6px #333;opacity:0}.customize-toolbar-icon:nth-child(1) .customize-toolbar-icon-tip{border-top-left-radius:15px}.customize-toolbar-icon:nth-child(5) .customize-toolbar-icon-tip{border-bottom-left-radius:15px}.customize-toolbar-blank{width:inherit;height:inherit;background:rgba(255,255,255,.2);border-radius:50%;box-shadow:0 0 10px #fff;position:absolute;top:0;overflow:hidden}.customize-toolbar-blank-bg{width:inherit;height:inherit;position:inherit}.customize-toolbar-blank-bg>div{position:inherit;width:inherit;height:inherit;z-index:-1;font-size:170px;text-align:center;line-height:200px;color:var(--tb-bg-blank-color);opacity:.5}.customize-toolbar-blank-tip{text-align:center}.customize-toolbar-blank-tip>div{display:inline-block;padding:10px;background:#333;color:#eee;border-radius:10px;font-size:.85rem;box-shadow:0 0 5px gray;transition:all 1s linear;position:relative;z-index:2;transform:translateY(30px)}.customize-toolbar-blank:hover>.customize-toolbar-blank-bg i{animation:rotate-own 4s linear infinite normal}.customize-toolbar-blank:hover>.customize-toolbar-bottom-close{top:180px}.customize-toolbar-bottom-close{width:inherit;height:inherit;position:inherit;background:#eee;border-radius:inherit;text-align:center;top:200px;color:#333;transition:all .5s linear}.customize-toolbar-bottom-close:hover{color:var(--global-link-color)}.customize-toolbar-bottom-close>div{height:20px;line-height:20px;cursor:pointer}.customize-toolbar-bottom-close i{cursor:pointer}div[id^=customize-toolbar].customize-toolbar-all-hide .customize-toolbar-bottom-close{top:180px;border-radius:initial}@media (max-width:800px){div[id^=customize-toolbar]{display:none}}";
 	resLoaders.addCss(tb_css);
-	var nonce = Math.random().toString().substring(2),
-		t = {
+	const nonce = Math.random().toString().substring(2);
+	var t = {
+		/**
+		 * tip text
+		 */
+		t: {
+			o: [
+				"播放背景音乐",
+				"暂停背景音乐",
+				"更换壁纸为Bing美图",
+				"换回原来壁纸",
+				"使用夜猫子外观",
+				"使用日间外观",
+			],
+			e: ["图像加载失败", "获取图像地址失败"],
+		},
+		/**
+		 * class list
+		 */
+		c: {
+			/**
+			 * visibility class
+			 */
+			v: {
+				toolBarHide: "customize-toolbar-all-hide",
+				menuHide: "customize-toolbar-menu-hide",
+				iconClick: "customize-toolbar-icon-clicking",
+				maskHide: "customize-toolbar-window-mask-hide",
+				tipHide: "customize-toolbar-tip-hide",
+			},
+			/**
+			 * rotation class
+			 */
+			r: {
+				picMove: "customize-toolbar-pic-move",
+				bgMove: "customize-toolbar-pic-bg-move",
+			},
+			/**
+			 * icon class
+			 */
+			i: {
+				dayIcon: "fa fa-tree",
+				dayBg: "fa fa-sun-o",
+				nightBgAndIcon: "fa fa-star",
+				bgmPlay: "fa fa-play",
+				bgmPause: "fa fa-pause",
+				closeTb: "fa fa-angle-up",
+				showTb: "fa fa-angle-down",
+			},
+			/**
+			 * wallpaper class
+			 */
+			w: {
+				start: "customize-wallpaper-bg-start",
+				end: "customize-wallpaper-bg-end",
+			},
+			/**
+			 * site theme class
+			 */
 			t: {
-				o: [
-					"播放背景音乐",
-					"暂停背景音乐",
-					"更换壁纸为Bing美图",
-					"换回原来壁纸",
-					"使用夜猫子外观",
-					"使用日间外观",
-				],
-				e: ["图像加载失败", "获取图像地址失败"],
+				day: "body-bg-day",
+				night: "body-bg-night",
 			},
-			c: {
-				v: {
-					toolBarHide: "customize-toolbar-hide-all",
-					menuHide: "customize-toolbar-hide",
-					iconClick: "customize-toolbar-icon-clicking",
-					maskHide: "customize-toolbar-window-mask-hide",
-				},
-				r: {
-					picMove: "customize-toolbar-pic-move",
-					bgMove: "customize-toolbar-pic-bg-move",
-				},
-				i: {
-					dayIcon: "fa fa-tree",
-					dayBg: "fa fa-sun-o",
-					nightBgAndIcon: "fa fa-star",
-					bgmPlay: "fa fa-play",
-					bgmPause: "fa fa-pause",
-				},
-				w: {
-					start: "customize-wallpaper-bg-start",
-					end: "customize-wallpaper-bg-end",
-				},
-				t: { day: "body-bg-day", night: "body-bg-night" },
+		},
+		/**
+		 * dom list
+		 */
+		d: {
+			/**
+			 * root dom of toolbar (id)
+			 */
+			t: "customize-toolbar-" + nonce,
+			/**
+			 * bgm audio dom (id)
+			 */
+			s: "customize-toolbar-bgm-" + nonce,
+			/**
+			 * button dom
+			 */
+			b: {
+				bingImageButton: '[data-func="bing-wallpaper"]>div:first-child',
+				bgmControlButton:
+					'[data-func="bgm-controller"]>div:first-child',
+				backToTopButton: '[data-func="back-to-top"]>div:first-child',
+				closeMenuButton: '[data-func="hide-menu"]>div:first-child',
+				shiftThemeButton: '[data-func="shift-theme"]>div:first-child',
 			},
-			d: {
-				t: "customize-toolbar-" + nonce,
-				s: "customize-toolbar-bgm-" + nonce,
-				b: {
-					bingImageButton:
-						'[data-func="bing-wallpaper"]>div:first-child',
-					bgmControlButton:
-						'[data-func="bgm-controller"]>div:first-child',
-					backToTopButton:
-						'[data-func="back-to-top"]>div:first-child',
-					closeMenuButton: '[data-func="hide-menu"]>div:first-child',
-					shiftThemeButton:
-						'[data-func="shift-theme"]>div:first-child',
-				},
-				p: ".customize-toolbar-core",
-				a: ".customize-toolbar-blank",
-				m: ".customize-toolbar-icon-set",
-				e: ".customize-toolbar-blank-tip>div",
-			},
-			getDom(s, id = false) {
-				return id
-					? document.getElementById(s)
-					: document.querySelector(s);
-			},
-			toggleCssClass(d, c, r) {
-				r ? d.classList.remove(c) : d.classList.add(c);
-			},
-			popErrorLog(t1, t2) {
-				var l = this.getDom(".customize-toolbar-blank-tip>div");
-				l.innerHTML = t1;
-				l.classList.remove("customize-toolbar-hide-tip");
-				this.switchPicAnimation(true);
-				console.error(t2);
-				setTimeout(function () {
-					l.classList.add("customize-toolbar-hide-tip");
-				}, 3e3);
-			},
-			switchPicAnimation(r) {
-				this.toggleCssClass(this.getDom(this.d.p), this.c.r.picMove, r);
-			},
-			setSiteTheme(t, b) {
-				if (t) {
-					Object.keys(op.siteTheme.dayTheme.css).forEach(function (
-						cssKey
-					) {
-						b.style.setProperty(
-							cssKey,
-							op.siteTheme.dayTheme.css[cssKey]
-						);
-					});
-					b.classList.remove(this.c.t.night);
-					b.classList.add(this.c.t.day);
-				} else {
-					Object.keys(op.siteTheme.nightTheme.css).forEach(function (
-						cssKey
-					) {
-						b.style.setProperty(
-							cssKey,
-							op.siteTheme.nightTheme.css[cssKey]
-						);
-					});
-					b.classList.remove(this.c.t.day);
-					b.classList.add(this.c.t.night);
-				}
-			},
-			setBingWallpaper(u) {
-				var temp = document.createElement("img"),
-					_this = this;
-				temp.setAttribute("src", u);
-				temp.addEventListener("load", function () {
-					var b = document.body;
-					if (!b.style.transition) {
-						b.style.transition = "background-position-x 2s linear";
-					}
-					b.classList.add(_this.c.w.start);
-					setTimeout(function () {
-						b.classList.add(_this.c.w.end);
-						b.style.backgroundImage = `url(${u})`;
-						_this.getDom(
-							_this.d.b.bingImageButton
-						).nextElementSibling.innerHTML = _this.t.o[3];
-						_this.switchPicAnimation(true);
-					}, 2e3);
+			/**
+			 * pic dom
+			 */
+			p: ".customize-toolbar-core",
+			/**
+			 * blank area bg dom
+			 */
+			a: ".customize-toolbar-blank-bg",
+			/**
+			 * menu dom
+			 */
+			m: ".customize-toolbar-icon-set",
+			/**
+			 * pop tip dom
+			 */
+			e: ".customize-toolbar-blank-tip>div",
+			/**
+			 * close toolbar botton
+			 */
+			c: ".customize-toolbar-bottom-close",
+		},
+		/**
+		 * Get Dom
+		 * @param {string} s
+		 * @param {boolean} id is id? default is false
+		 */
+		getDom(s, id = false) {
+			return id ? document.getElementById(s) : document.querySelector(s);
+		},
+		/**
+		 * toggle css class
+		 * @param {Element} d dom
+		 * @param {string} c class name
+		 * @param {boolean} r confirm remove class? true=remove, false=add
+		 */
+		toggleCssClass(d, c, r) {
+			r ? d.classList.remove(c) : d.classList.add(c);
+		},
+		/**
+		 * pop error tip
+		 * @param {string} t1 show alert
+		 * @param {string} t2 console log
+		 */
+		popErrorLog(t1, t2) {
+			var l = this.getDom(t.d.e);
+			l.innerHTML = t1;
+			l.classList.remove(t.c.v.tipHide);
+			this.switchPicAnimation(true); //stop pic rotation
+			console.error(t2);
+			setTimeout(function () {
+				l.classList.add(t.c.v.tipHide);
+			}, 3000);
+		},
+		/**
+		 * switch toolbar img animation
+		 * @param {boolean} r confirm stop?
+		 */
+		switchPicAnimation(r) {
+			this.toggleCssClass(this.getDom(this.d.p), this.c.r.picMove, r);
+		},
+		/**
+		 * set day/night site theme
+		 * @param {number} t time, 1=day, 0=night
+		 * @param {HTMLBodyElement} b
+		 */
+		setSiteTheme(t, b) {
+			if (t) {
+				Object.keys(op.siteTheme.dayTheme.css).forEach(function (
+					cssKey
+				) {
+					b.style.setProperty(
+						cssKey,
+						op.siteTheme.dayTheme.css[cssKey]
+					);
 				});
-				temp.addEventListener("error", function () {
-					_this.popErrorLog(_this.t.e[0], "load image failed");
+				b.classList.remove(this.c.t.night);
+				b.classList.add(this.c.t.day);
+			} else {
+				Object.keys(op.siteTheme.nightTheme.css).forEach(function (
+					cssKey
+				) {
+					b.style.setProperty(
+						cssKey,
+						op.siteTheme.nightTheme.css[cssKey]
+					);
 				});
-			},
-			getBingWallpaperFromCache() {
-				var localCache = localStorage.getItem("today-bing-image");
-				if (localCache) {
-					var localObj = JSON.parse(localCache);
-					if (
-						new Date(localObj.time).getDate() !==
-						new Date().getDate()
-					) {
-						this.getBingWallpaperFromServer();
-					} else {
-						this.switchPicAnimation(false);
-						this.setBingWallpaper(localObj.url, true);
-					}
-				} else {
-					this.getBingWallpaperFromServer();
+				b.classList.remove(this.c.t.day);
+				b.classList.add(this.c.t.night);
+			}
+		},
+		/**
+		 * Set day/night toolbar theme after shifting from other theme
+		 * @param {number} t time ,1=day, 0=night
+		 * @param {HTMLElement} si shift-theme button icon
+		 * @param {HTMLElement} s shift-theme button
+		 * @param {HTMLElement} tb toolbar dom
+		 */
+		setToolbarTheme(t, si, s, tb) {
+			if (t) {
+				si.setAttribute("class", this.c.i.nightBgAndIcon);
+				s.nextElementSibling.innerHTML = this.t.o[4];
+				tb.style.setProperty(
+					"--tb-bg-blank-color",
+					op.toolbarTheme["bg-pattern-color"][0]
+				);
+			} else {
+				si.setAttribute("class", this.c.i.dayIcon);
+				s.nextElementSibling.innerHTML = this.t.o[5];
+				tb.style.setProperty(
+					"--tb-bg-blank-color",
+					op.toolbarTheme["bg-pattern-color"][1]
+				);
+			}
+		},
+		/**
+		 * set bing wallpaper
+		 * @param {string} u wallpaper url
+		 */
+		setBingWallpaper(u) {
+			var temp = document.createElement("img"),
+				_this = this;
+			temp.setAttribute("src", u);
+			temp.addEventListener("load", function () {
+				var b = document.body;
+				if (!b.style.transition) {
+					b.style.transition = "background-position-x 2s linear";
 				}
-			},
-			getBingWallpaperFromServer() {
-				this.switchPicAnimation(false);
-				var cusHeader = new Headers();
-				cusHeader.append("x-token", op.bingImageApi.token);
-				var cusInit = { headers: cusHeader },
-					_this = this;
-				fetch(op.bingImageApi.url, cusInit)
-					.then(function (d) {
-						if (d.status !== 200) {
-							throw new Error("get image url failed");
-						}
-						return d.text();
-					})
-					.then(function (r) {
-						_this.setBingWallpaper(r, true);
-						return r;
-					})
-					.then(function (d) {
-						var s = { url: d, time: new Date().getTime() };
-						localStorage.setItem(
-							"today-bing-image",
-							JSON.stringify(s)
-						);
-					})
-					.catch(function (e) {
-						_this.popErrorLog(_this.t.e[1], e);
-					});
-			},
-			backToOriginBackground() {
-				var b = document.body,
-					_this = this;
-				b.classList.remove(_this.c.w.end);
+				b.classList.add(_this.c.w.start);
 				setTimeout(function () {
-					b.style.removeProperty("background-image");
-					b.classList.remove(_this.c.w.start);
+					b.classList.add(_this.c.w.end);
+					b.style.backgroundImage = `url(${u})`;
 					_this.getDom(
 						_this.d.b.bingImageButton
-					).nextElementSibling.innerHTML = _this.t.o[2];
-				}, 2e3);
-			},
-		};
-	resLoaders.addHtml(tb_html, { id: t.d.t });
+					).nextElementSibling.innerHTML = _this.t.o[3];
+					_this.switchPicAnimation(true);
+				}, 2000);
+			});
+			temp.addEventListener("error", function () {
+				_this.popErrorLog(_this.t.e[0], "load image failed");
+			});
+		},
+		getBingWallpaperFromCache() {
+			var localCache = localStorage.getItem("today-bing-image");
+			if (localCache) {
+				var localObj = JSON.parse(localCache);
+				if (
+					new Date(localObj.time).getDate() !== new Date().getDate()
+				) {
+					this.getBingWallpaperFromServer();
+				} else {
+					this.switchPicAnimation(false);
+					this.setBingWallpaper(localObj.url, true);
+				}
+			} else {
+				this.getBingWallpaperFromServer();
+			}
+		},
+		getBingWallpaperFromServer() {
+			this.switchPicAnimation(false);
+			var cusHeader = new Headers();
+			cusHeader.append("x-token", op.bingImageApi.token);
+			var cusInit = { headers: cusHeader },
+				_this = this;
+			fetch(op.bingImageApi.url, cusInit)
+				.then(function (d) {
+					if (d.status !== 200) {
+						throw new Error("get image url failed");
+					}
+					return d.text();
+				})
+				.then(function (r) {
+					_this.setBingWallpaper(r, true);
+					return r;
+				})
+				.then(function (d) {
+					var s = {
+						url: d,
+						time: new Date().getTime(),
+					};
+					localStorage.setItem("today-bing-image", JSON.stringify(s));
+				})
+				.catch(function (e) {
+					_this.popErrorLog(_this.t.e[1], e);
+				});
+		},
+		backToOriginBackground() {
+			var b = document.body,
+				_this = this;
+			b.classList.remove(_this.c.w.end);
+			setTimeout(function () {
+				b.style.removeProperty("background-image");
+				b.classList.remove(_this.c.w.start);
+				_this.getDom(
+					_this.d.b.bingImageButton
+				).nextElementSibling.innerHTML = _this.t.o[2];
+			}, 2000);
+		},
+	};
+	resLoaders.addHtml(tb_html, {
+		id: t.d.t,
+		class: t.c.v.toolBarHide[0],
+	});
 	var au = t.getDom(t.d.b.bgmControlButton),
 		tb = t.getDom(t.d.t, true),
+		m = t.getDom(t.d.m),
 		s = t.getDom(t.d.b.shiftThemeButton),
+		si = s.getElementsByTagName("i")[0],
 		a = document.createElement("audio");
 	Object.keys(t.d.b).forEach(function (btn) {
 		var b = t.getDom(t.d.b[btn]);
@@ -244,7 +350,7 @@ var resLoaders = {
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	});
 	t.getDom(t.d.b.closeMenuButton).addEventListener("click", function () {
-		t.getDom(t.d.m).classList.add(t.c.v.menuHide);
+		m.classList.add(t.c.v.menuHide);
 	});
 	t.getDom(t.d.b.bingImageButton).addEventListener("click", function () {
 		document.body.style.backgroundImage
@@ -253,30 +359,60 @@ var resLoaders = {
 	});
 	t.getDom(t.d.a).addEventListener("click", function (e) {
 		e.stopPropagation();
-		t.getDom(t.d.m).classList.toggle(t.c.v.menuHide);
+		m.classList.toggle(t.c.v.menuHide);
+	});
+	t.getDom(t.d.c).addEventListener("click", function () {
+		var _this = this;
+		if (tb.classList.contains(t.c.v.toolBarHide)) {
+			tb.classList.remove(t.c.v.toolBarHide);
+			_this
+				.getElementsByTagName("i")[0]
+				.setAttribute("class", t.c.i.closeTb);
+		}
+		else {
+			if (m.classList.contains(t.c.v.menuHide)) {
+				tb.classList.add(t.c.v.toolBarHide);
+			} else {
+				m.classList.add(t.c.v.menuHide);
+				setTimeout(function () {
+					tb.classList.add(t.c.v.toolBarHide);
+				}, 500);
+			}
+			_this
+				.getElementsByTagName("i")[0]
+				.setAttribute("class", t.c.i.showTb);
+		}
 	});
 	window.addEventListener("load", function () {
-		t.getDom(t.d.m).classList.toggle(t.c.v.menuHide);
-		var l = t.getDom(".customize-toolbar-blank-tip>div");
-		l.classList.remove("customize-toolbar-hide-tip");
+		//add toolbar move effect: from top to bottom
+		tb.classList.remove(t.c.v.toolBarHide[0]);
 		setTimeout(function () {
-			l.classList.add("customize-toolbar-hide-tip");
-		}, 1e4);
+			//show the menu
+			m.classList.remove(t.c.v.menuHide);
+			//show the tip
+			var l = t.getDom(t.d.e);
+			l.classList.remove(t.c.v.tipHide);
+			//close tip after 5s
+			setTimeout(function () {
+				l.classList.add(t.c.v.tipHide);
+			}, 5000);
+		}, 1000);
 	});
 	s.addEventListener("click", function () {
 		var b = document.body;
+		//switch to night theme if body element has 'body-bg-day' class
 		if (b.classList.contains(t.c.t.day)) {
 			t.setSiteTheme(0, b);
-			s.getElementsByTagName("i")[0].setAttribute("class", t.c.i.dayIcon);
-			s.nextElementSibling.innerHTML = t.t.o[5];
+			//change the shift-theme button icon and tip
+			//change the bg pattern color
+			t.setToolbarTheme(0, si, s, tb);
+			//cache the preferred theme
 			localStorage.setItem("preferred-theme", "n");
-		} else {
+		}
+		//switch to day theme if body element has 'body-bg-night' class
+		else {
 			t.setSiteTheme(1, b);
-			s.getElementsByTagName("i")[0].setAttribute(
-				"class",
-				t.c.i.nightBgAndIcon
-			);
-			s.nextElementSibling.innerHTML = t.t.o[4];
+			t.setToolbarTheme(1, si, s, tb);
 			localStorage.setItem("preferred-theme", "d");
 		}
 	});
@@ -306,22 +442,24 @@ var resLoaders = {
 	a.setAttribute("id", t.d.s);
 	a.loop = true;
 	document.body.appendChild(a);
+	//set toolbar appearance
+	//set site appearance
 	Object.keys(op.toolbarTheme).forEach(function (cssKey) {
-		tb.style.setProperty("--tb-" + cssKey, op.toolbarTheme[cssKey]);
+		if (cssKey !== "bg-pattern-color") {
+			tb.style.setProperty("--tb-" + cssKey, op.toolbarTheme[cssKey]);
+		}
 	});
+	//get user preferred theme, if it exists, then use the preferred option
 	var pt = localStorage.getItem("preferred-theme");
+	//day time
 	if (hour >= 6 && hour <= 18) {
+		//if preferred option exists, the toolbar button should also be updated to follow the preferred theme
 		if (pt == "n") {
 			t.setSiteTheme(0, document.body);
-			s.getElementsByTagName("i")[0].setAttribute("class", t.c.i.dayIcon);
-			s.nextElementSibling.innerHTML = t.t.o[5];
+			t.setToolbarTheme(0, si, s, tb);
 		} else {
 			t.setSiteTheme(1, document.body);
-			s.getElementsByTagName("i")[0].setAttribute(
-				"class",
-				t.c.i.nightBgAndIcon
-			);
-			s.nextElementSibling.innerHTML = t.t.o[4];
+			t.setToolbarTheme(1, si, s, tb);
 		}
 		t.getDom("day-night-theme-image", true).setAttribute(
 			"src",
@@ -330,18 +468,15 @@ var resLoaders = {
 		t.getDom(t.d.a)
 			.getElementsByTagName("i")[0]
 			.setAttribute("class", t.c.i.dayBg);
-	} else {
+	}
+	//night time
+	else {
 		if (pt == "d") {
 			t.setSiteTheme(1, document.body);
-			s.getElementsByTagName("i")[0].setAttribute(
-				"class",
-				t.c.i.nightBgAndIcon
-			);
-			s.nextElementSibling.innerHTML = t.t.o[4];
+			t.setToolbarTheme(1, si, s, tb);
 		} else {
 			t.setSiteTheme(0, document.body);
-			s.getElementsByTagName("i")[0].setAttribute("class", t.c.i.dayIcon);
-			s.nextElementSibling.innerHTML = t.t.o[5];
+			t.setToolbarTheme(0, si, s, tb);
 		}
 		t.getDom("day-night-theme-image", true).setAttribute(
 			"src",
@@ -806,7 +941,7 @@ var resLoaders = {
 					}
 					ismove = true;
 				};
-				document.onmouseup = function (e) {
+				document.onmouseup = function () {
 					document.onmousemove = null;
 					document.onmouseup = null;
 				};

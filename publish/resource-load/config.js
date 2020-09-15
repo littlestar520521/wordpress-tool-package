@@ -13,6 +13,7 @@ const data = {
 		"bg-hover-color": "#ffb6c1",
 		"bg-img-css":
 			"url(https://wp-cdn.bozaiq.cn/uni/images/backgrounds/classical/38692245e2399f647d0eea3fa8d2647c.png)",
+		"bg-pattern-color": ["#eee", "#aaa"],
 	},
 	siteTheme: {
 		dayTheme: {

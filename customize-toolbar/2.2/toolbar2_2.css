@@ -52,6 +52,7 @@ div[id^="customize-toolbar"] {
 	bottom: calc(var(--tb-bottom));
 	right: -2px;
 	opacity: 1;
+  z-index: 105;
 	--tb-bottom: 2px;
 	--tb-dot-bottom: 160px;
 	/*follow the theme: aaa or eee*/
@@ -138,19 +139,19 @@ div[id^="customize-toolbar"].customize-toolbar-all-hide-85 {
 }
 .customize-toolbar-icon:nth-child(1) {
 	right: -50px;
-	top: 10px;
+	top: 12px;
 }
 .customize-toolbar-icon:nth-child(2) {
-	right: 10px;
+	right: 6px;
 }
 .customize-toolbar-icon:nth-child(3) {
-	right: 33px;
+	right: 30px;
 }
 .customize-toolbar-icon:nth-child(4) {
-	right: 33px;
+	right: 30px;
 }
 .customize-toolbar-icon:nth-child(5) {
-	right: 5px;
+	right: 3px;
 }
 .customize-toolbar-icon:nth-child(5) i,
 .customize-toolbar-bottom-close i {
@@ -218,7 +219,6 @@ div[id^="customize-toolbar"].customize-toolbar-all-hide-85 {
 	box-shadow: 0 0 10px #fff;
 	position: absolute;
 	top: 0;
-	cursor: pointer;
 	overflow: hidden;
 }
 .customize-toolbar-blank-bg {
@@ -263,7 +263,7 @@ div[id^="customize-toolbar"].customize-toolbar-all-hide-85 {
 	width: inherit;
 	height: inherit;
 	position: inherit;
-	background: rgba(255, 255, 255, 0.6);
+	background: #eee;
 	border-radius: inherit;
 	text-align: center;
 	top: 200px;
@@ -272,6 +272,18 @@ div[id^="customize-toolbar"].customize-toolbar-all-hide-85 {
 }
 .customize-toolbar-bottom-close:hover {
 	color: var(--global-link-color);
+}
+.customize-toolbar-bottom-close>div{
+	height: 20px;
+	line-height: 20px;
+	cursor: pointer
+}
+.customize-toolbar-bottom-close i{
+	cursor: pointer
+}
+div[id^="customize-toolbar"].customize-toolbar-all-hide .customize-toolbar-bottom-close{
+	top: 180px;
+	border-radius: initial
 }
 @media (max-width: 800px) {
 	div[id^="customize-toolbar"] {

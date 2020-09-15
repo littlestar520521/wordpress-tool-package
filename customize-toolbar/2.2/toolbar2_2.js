@@ -92,10 +92,7 @@ var t = {
 		 * visibility class
 		 */
 		v: {
-			toolBarHide: [
-				"customize-toolbar-all-hide",
-				"customize-toolbar-all-hide-85",
-			],
+			toolBarHide: "customize-toolbar-all-hide",
 			menuHide: "customize-toolbar-menu-hide",
 			iconClick: "customize-toolbar-icon-clicking",
 			maskHide: "customize-toolbar-window-mask-hide",
@@ -385,35 +382,24 @@ t.getDom(t.d.b.bingImageButton).addEventListener("click", function () {
 });
 t.getDom(t.d.a).addEventListener("click", function (e) {
 	e.stopPropagation();
-	t.getDom(t.d.m).classList.toggle(t.c.v.menuHide);
+	m.classList.toggle(t.c.v.menuHide);
 });
 t.getDom(t.d.c).addEventListener("click", function () {
+	//TODO: the site banner has larger z-index value, the widget may be covered
 	//if toolbar is hidden, then show it
-	var _this = this,
-		h = document.documentElement.scrollTop;
-	if (
-		tb.classList.contains(t.c.v.toolBarHide[0]) ||
-		tb.classList.contains(t.c.v.toolBarHide[1])
-	) {
-		tb.classList.remove(t.c.v.toolBarHide[0], t.c.v.toolBarHide[1]);
-		setTimeout(function () {
-			_this
-				.getElementsByTagName("i")[0]
-				.setAttribute("class", t.c.i.closeTb);
-		}, 1000);
+	var _this = this;
+	if (tb.classList.contains(t.c.v.toolBarHide)) {
+		tb.classList.remove(t.c.v.toolBarHide);
+		_this.getElementsByTagName("i")[0].setAttribute("class", t.c.i.closeTb);
 	}
 	//if toolbar is shown, then close it
 	else {
 		if (m.classList.contains(t.c.v.menuHide)) {
-			h <= 85
-				? tb.classList.add(t.c.v.toolBarHide[0])
-				: tb.classList.add(t.c.v.toolBarHide[1]);
+			tb.classList.add(t.c.v.toolBarHide);
 		} else {
 			m.classList.add(t.c.v.menuHide);
 			setTimeout(function () {
-				h <= 85
-					? tb.classList.add(t.c.v.toolBarHide[0])
-					: tb.classList.add(t.c.v.toolBarHide[1]);
+				tb.classList.add(t.c.v.toolBarHide);
 			}, 500);
 		}
 		_this.getElementsByTagName("i")[0].setAttribute("class", t.c.i.showTb);
