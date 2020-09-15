@@ -329,7 +329,7 @@ var resLoaders = {
 	};
 	resLoaders.addHtml(tb_html, {
 		id: t.d.t,
-		class: t.c.v.toolBarHide[0],
+		class: t.c.v.toolBarHide,
 	});
 	var au = t.getDom(t.d.b.bgmControlButton),
 		tb = t.getDom(t.d.t, true),
@@ -385,7 +385,7 @@ var resLoaders = {
 	});
 	window.addEventListener("load", function () {
 		//add toolbar move effect: from top to bottom
-		tb.classList.remove(t.c.v.toolBarHide[0]);
+		tb.classList.remove(t.c.v.toolBarHide);
 		setTimeout(function () {
 			//show the menu
 			m.classList.remove(t.c.v.menuHide);

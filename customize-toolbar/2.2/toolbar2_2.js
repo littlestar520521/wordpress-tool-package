@@ -407,7 +407,7 @@ t.getDom(t.d.c).addEventListener("click", function () {
 });
 window.addEventListener("load", function () {
 	//add toolbar move effect: from top to bottom
-	tb.classList.remove(t.c.v.toolBarHide[0]);
+	tb.classList.remove(t.c.v.toolBarHide);
 	setTimeout(function () {
 		//show the menu
 		m.classList.remove(t.c.v.menuHide);
