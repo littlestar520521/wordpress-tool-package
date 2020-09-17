@@ -95,7 +95,6 @@ var t = {
 			toolBarHide: "customize-toolbar-all-hide",
 			menuHide: "customize-toolbar-menu-hide",
 			iconClick: "customize-toolbar-icon-clicking",
-			maskHide: "customize-toolbar-window-mask-hide",
 			tipHide: "customize-toolbar-tip-hide",
 		},
 		/**
@@ -198,13 +197,14 @@ var t = {
 	 * @param {string} t2 console log
 	 */
 	popErrorLog(t1, t2) {
-		var l = this.getDom(t.d.e);
+		var l = this.getDom(this.d.e),
+			_this = this;
 		l.innerHTML = t1;
-		l.classList.remove(t.c.v.tipHide);
+		l.classList.remove(_this.c.v.tipHide);
 		this.switchPicAnimation(true); //stop pic rotation
 		console.error(t2);
 		setTimeout(function () {
-			l.classList.add(t.c.v.tipHide);
+			l.classList.add(_this.c.v.tipHide);
 		}, 3000);
 	},
 	/**
