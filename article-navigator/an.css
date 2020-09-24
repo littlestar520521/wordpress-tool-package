@@ -1,0 +1,252 @@
+html,
+body,
+div,
+span,
+ul,
+li,
+a {
+	margin: 0;
+	padding: 0;
+}
+a {
+	text-decoration: none;
+}
+ul {
+	list-style: none;
+}
+body,
+html {
+	width: 100%;
+	height: 100%;
+}
+body {
+	background: url(../../Assets/bg/6fcd879e9b4d0a6084d0306a5cf2d31e.jpg) center;
+	background-size: cover;
+}
+#customize-article-navigator {
+	font-family: sans-serif;
+	letter-spacing: 1px;
+	background-color: #eee;
+	box-sizing: content-box;
+	border-radius: 6px;
+	position: fixed;
+	left: 10px;
+	transition: all 1s linear;
+	top: var(--an-top-distance);
+	max-height: var(--an-bg-height);
+	border: 6px double var(--an-edge-color);
+	--an-scroll-height: 35px;
+	--an-bg-height: 300px;
+	--an-margin-lr: 10px;
+	--an-margin-tb: 20px;
+	--an-top-distance: 200px;
+	--an-edge-color: darkred;
+}
+#customize-article-navigator::before {
+	background: rgba(240, 240, 240, 0.5);
+}
+#customize-article-navigator::after {
+	background: url(../assets/e3f7cd0f76396a1d2b06c517dae73a54_1.png) no-repeat
+		center;
+	background-size: cover;
+}
+#customize-article-navigator.customize-an-hide {
+	--an-top-distance: calc(var(--an-bg-height) * -1);
+	opacity: 0;
+}
+.customize-an-bg-layer::before,
+.customize-an-bg-layer::after {
+	content: "";
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.customize-an-bg-layer::after {
+	z-index: -2;
+}
+.customize-an-bg-layer::before {
+	z-index: -1;
+}
+.customize-an-title {
+	margin: var(--an-margin-tb) var(--an-margin-lr);
+	text-align: center;
+	font-size: 18px;
+	color: #666;
+	font-family: KaiTi;
+}
+/*border decoration start*/
+.customize-an-border > div {
+	position: absolute;
+	background: url(../assets/5fbd3bbb318bec189ee9b717cd3c2f6a_4.png) center;
+	background-size: cover;
+	width: 25px;
+	height: 25px;
+}
+.customize-an-border-tl {
+	top: 0;
+	left: 0;
+	transform: rotate(180deg);
+}
+.customize-an-border-tr {
+	top: 0;
+	right: 0;
+	transform: rotate(270deg);
+}
+.customize-an-border-bl {
+	bottom: 0;
+	left: 0;
+	transform: rotate(90deg);
+}
+.customize-an-border-br {
+	bottom: 0;
+	right: 0;
+}
+/*border decoration end*/
+/*scroller start*/
+.customize-an-blocks > .customize-an-scroller {
+	position: absolute;
+	width: 6px;
+	height: calc(100% - 10px);
+	right: 1px;
+	top: 5px;
+	opacity: 0;
+	transition: opacity 0.5s linear;
+	z-index: 1;
+}
+.customize-an-scroller-progress {
+	width: 4px;
+	height: 30px;
+	background: #666;
+	opacity: 0.8;
+	border-radius: 4px;
+	cursor: pointer;
+}
+.customize-an-scroller:hover,
+.customize-an-scroller.customize-an-scroller-show {
+	opacity: 1;
+}
+/*scroller end*/
+/*nav block start*/
+.customize-an-blocks {
+	margin: 0 0 var(--an-margin-tb) 0;
+	text-align: center;
+	/*total height - top title height - top title margin - block area margin*/
+	max-height: calc(
+		var(--an-bg-height) - 24px - var(--an-margin-tb) * 2 -
+			var(--an-margin-tb)
+	);
+	overflow: hidden;
+	position: relative;
+}
+.customize-an-blocks > .customize-an-block-container {
+	position: relative;
+	bottom: var(--an-scroll-height);
+}
+.customize-an-block {
+	position: relative;
+	margin-bottom: 5px;
+}
+.customize-an-block > div {
+	margin: 0 var(--an-margin-lr);
+	border-bottom: 1px solid #ccc;
+	box-sizing: content-box;
+	padding: 5px;
+}
+.customize-an-block-title {
+	margin-bottom: 5px;
+	font-size: 0.9rem;
+}
+.customize-an-block-title > div {
+	display: inline-block;
+}
+.customize-an-block-title > div > span {
+	/*darkgray*/
+	color: #a9a9a9;
+}
+.customize-an-block-title > div > span:nth-child(2) {
+	font-family: Calibri;
+	color: #666;
+}
+.customize-an-block-title > span:nth-last-child(2) {
+	margin: 0 3px;
+	/*lightgray*/
+	color: #d3d3d3;
+}
+.customize-an-block-title > span:last-child {
+	/*lightslategray*/
+	color: #789;
+}
+.customize-an-nav li {
+	line-height: 1.5;
+	font-size: 0.9rem;
+}
+.customize-an-nav a {
+	color: #bc8f8f;
+}
+.customize-an-nav a:hover,
+.customize-an-collapse > div:hover {
+	color: #777;
+}
+/*nav block end*/
+/*hang line start*/
+.customize-an-hang {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+.customize-an-hang-node {
+	width: 8px;
+	height: 8px;
+	background: var(--an-edge-color);
+	border: 1px solid #000;
+	box-sizing: content-box;
+	margin-left: calc(50% - 4px);
+	margin-top: -8px;
+	transform: rotate(45deg);
+}
+.customize-an-hang-line {
+	position: absolute;
+	width: 2px;
+	height: var(--an-top-distance);
+	background: darkred;
+	bottom: 7px;
+	left: 50%;
+	transition: height 1s linear;
+}
+/*hang line end*/
+/*collapse button start*/
+.customize-an-collapse {
+	position: relative;
+	bottom: var(--an-margin-tb);
+	line-height: 20px;
+	text-align: center;
+}
+.customize-an-collapse > div {
+	display: inline-block;
+	color: #d3d3d3;
+	transition: color 0.5s linear;
+	cursor: pointer;
+	position: relative;
+}
+.customize-an-collapse > div::after {
+	position: absolute;
+	content: "收起章节导航";
+	white-space: nowrap;
+	font-size: 0.6rem;
+	background: antiquewhite;
+	border: 2px solid var(--an-edge-color);
+	box-sizing: content-box;
+	padding: 3px 5px;
+	border-radius: 6px;
+	color: #888;
+	top: 30px;
+	left: 50%;
+	display: none;
+}
+.customize-an-collapse > div:hover::after {
+	display: block;
+}
+/*collapse button end*/
