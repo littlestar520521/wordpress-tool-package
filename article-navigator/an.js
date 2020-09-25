@@ -42,3 +42,11 @@ const nav2 = [
 		list: ["2-3", "2-4"],
 	},
 ];
+
+var an = document.getElementById("customize-article-navigator");
+
+document
+	.querySelector(".customize-an-collapse>div")
+	.addEventListener("click", function () {
+		an.classList.toggle("customize-an-hide");
+	});
