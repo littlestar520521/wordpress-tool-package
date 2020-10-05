@@ -33,7 +33,10 @@ body {
 	top: var(--an-top-distance);
 	max-height: var(--an-bg-height);
 	border: 6px double var(--an-edge-color);
-	--an-scroll-height: 35px;
+	/*scroll bar length*/
+	--an-scroll-bar-len: unset;
+	/*blocks area scrolled height*/
+	--an-blocks-scroll-height: unset;
 	--an-bg-height: 300px;
 	--an-margin-lr: 10px;
 	--an-margin-tb: 20px;
@@ -157,7 +160,7 @@ body {
 }
 .customize-an-scroller-progress {
 	width: 4px;
-	height: 30px;
+	height: var(--an-scroll-bar-len);
 	background: #666;
 	opacity: 0.8;
 	border-radius: 4px;
@@ -182,7 +185,7 @@ body {
 }
 .customize-an-blocks > .customize-an-block-container {
 	position: relative;
-	bottom: var(--an-scroll-height);
+	bottom: var(--an-blocks-scroll-height);
 }
 .customize-an-block {
 	position: relative;
