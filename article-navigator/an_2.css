@@ -1,0 +1,283 @@
+html,
+body,
+div,
+span,
+ul,
+li,
+a {
+	margin: 0;
+	padding: 0;
+}
+a {
+	text-decoration: none;
+}
+ul {
+	list-style: none;
+}
+body,
+html {
+	width: 100%;
+	height: 100%;
+}
+body {
+	background: url(../../Assets/bg/6fcd879e9b4d0a6084d0306a5cf2d31e.jpg) center;
+	background-size: cover;
+}
+#customize-article-navigator {
+	font-family: sans-serif;
+	letter-spacing: 1px;
+	background-color: #eee;
+	box-sizing: content-box;
+	position: fixed;
+	left: 0;
+	max-width: 240px;
+	top: var(--an-top-distance);
+	/*content height - double border size*/
+	max-height: calc(var(--an-bg-height) - 12px);
+	border: 6px double var(--an-edge-color);
+	/*scroll bar length*/
+	--an-scroll-bar-len: unset;
+	/*blocks area scrolled height*/
+	--an-blocks-scroll-height: unset;
+	--an-bg-height: calc(100vh - 85px);
+	--an-margin-lr: 10px;
+	--an-margin-tb: 20px;
+	--an-top-distance: 85px;
+	--an-edge-color: darkred;
+	--an-deco-corner-size: 35px;
+}
+.customize-an-pseudo-el-layer::before,
+.customize-an-pseudo-el-layer::after {
+	content: "";
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+/*top title start*/
+.customize-an-title {
+	text-align: center;
+	font-size: 18px;
+	color: #666;
+	font-family: KaiTi;
+	line-height: 24px;
+	box-shadow: 0 0 5px #808080;
+	position: relative;
+	/*antiquewhite->bisque->antiquewhite*/
+	background: linear-gradient(to right, #faebd7, #ffe4c4, #faebd7);
+}
+.customize-an-title::after {
+	background: url(../assets/3584aea555db7ef041845aff44f33622_s.png) no-repeat
+		bottom;
+	background-size: contain;
+}
+.customize-an-title > div:first-child {
+	position: absolute;
+	top: 10px;
+	left: 30px
+}
+.customize-an-title > div:last-child {
+	display: inline-block;
+	position: relative;
+	margin: var(--an-margin-tb) 0;
+}
+.customize-an-title > div:last-child::before,
+.customize-an-title > div:last-child::after {
+	content: "";
+	position: absolute;
+	width: 10%;
+	height: 30%;
+}
+.customize-an-title > div:last-child::before {
+	border-top: 1px solid;
+	border-left: 1px solid;
+	top: -3px;
+	left: -5px;
+}
+.customize-an-title > div:last-child::after {
+	border-bottom: 1px solid;
+	border-right: 1px solid;
+	right: -5px;
+	bottom: -3px;
+}
+/*top title end*/
+/*border decoration start*/
+.customize-an-border > div {
+	position: absolute;
+	background: url(../assets/5fbd3bbb318bec189ee9b717cd3c2f6a_4.png) center;
+	background-size: cover;
+	width: var(--an-deco-corner-size);
+	height: var(--an-deco-corner-size);
+	opacity: 0.7;
+}
+.customize-an-border-tl {
+	top: 0;
+	left: 0;
+	transform: rotate(180deg);
+}
+.customize-an-border-tr {
+	top: 0;
+	right: 0;
+	transform: rotate(270deg);
+}
+.customize-an-border-bl {
+	bottom: 0;
+	left: 0;
+	transform: rotate(90deg);
+}
+.customize-an-border-br {
+	bottom: 0;
+	right: 0;
+}
+/*border decoration end*/
+/*scroller start*/
+.customize-an-blocks > .customize-an-scroller {
+	position: absolute;
+	width: 6px;
+	height: 100%;
+	right: 1px;
+	top: 0;
+	opacity: 0;
+	transition: opacity 0.5s linear;
+	z-index: 1;
+}
+.customize-an-scroller-progress {
+	width: 4px;
+	height: var(--an-scroll-bar-len);
+	background: #666;
+	opacity: 0.8;
+	border-radius: 4px;
+	cursor: pointer;
+}
+.customize-an-scroller:hover,
+.customize-an-scroller.customize-an-scroller-show {
+	opacity: 1;
+}
+/*scroller end*/
+/*nav block start*/
+.customize-an-blocks {
+	text-align: center;
+	/*total height - border size*2 - top title height - top title margin - bottom decoration corner size*/
+	max-height: calc(
+		var(--an-bg-height) - 12px - 24px - var(--an-margin-tb) * 2 -
+			var(--an-deco-corner-size)
+	);
+	overflow: hidden;
+	position: relative;
+}
+.customize-an-blocks::before {
+	/*beige*/
+	background: rgba(255, 228, 196, 0.3);
+	z-index: -1;
+}
+.customize-an-blocks::after {
+	background-image: url(../assets/f5318eb1f99b3688ad222c565d7c8ffd.png);
+	background-position: center;
+	background-size: cover;
+	opacity: 0.5;
+	z-index: -2;
+}
+.customize-an-blocks > .customize-an-block-container {
+	position: relative;
+	bottom: var(--an-blocks-scroll-height);
+}
+.customize-an-block {
+	position: relative;
+	margin-bottom: 5px;
+}
+.customize-an-block > div {
+	margin: 0 var(--an-margin-lr);
+	/*! border-bottom: 1px solid #ccc; */
+	box-sizing: content-box;
+	padding: 5px;
+}
+.customize-an-block-title {
+	margin-bottom: 5px;
+	font-size: 0.9rem;
+	line-break: initial;
+}
+.customize-an-block-title > div {
+	display: inline-block;
+}
+.customize-an-block-title > div > span {
+	/*darkgray*/
+	color: #a9a9a9;
+}
+.customize-an-block-title > div > span:nth-child(2) {
+	font-family: Calibri;
+	color: #666;
+}
+.customize-an-block-title > span:nth-last-child(2) {
+	margin: 0 3px;
+	/*lightgray*/
+	color: #d3d3d3;
+}
+.customize-an-block-title > span:last-child {
+	/*lightslategray*/
+	color: #789;
+}
+.customize-an-nav li {
+	line-height: 1.5;
+	font-size: 0.9rem;
+}
+.customize-an-nav a {
+	color: #bc8f8f;
+}
+.customize-an-nav a:hover,
+.customize-an-collapse > div:hover {
+	color: #777;
+}
+/*nav block end*/
+/*collapse button start*/
+.customize-an-collapse {
+	position: relative;
+	height: var(--an-deco-corner-size);
+	line-height: var(--an-deco-corner-size);
+	text-align: center;
+	box-shadow: 0 0 5px #808080;
+}
+.customize-an-collapse::after {
+    z-index: -1;
+	
+}
+.customize-an-collapse > div {
+	display: inline-block;
+	color: #bbb;
+	font-size: 0.9rem;
+	transition: color 0.5s linear;
+	cursor: pointer;
+	position: relative;
+}
+.customize-an-collapse > div i {
+	transition: transform 0.5s linear;
+}
+.customize-an-collapse > div:hover i {
+	transform: rotate(90deg);
+}
+.customize-an-collapse > div::before,
+.customize-an-collapse > div::after {
+	position: absolute;
+	white-space: nowrap;
+	font-size: 0.6rem;
+	background: #faebd7;
+	border: 2px solid var(--an-edge-color);
+	box-sizing: content-box;
+	padding: 3px 5px;
+	border-radius: 6px;
+	color: #888;
+	display: none;
+	line-height: initial;
+	top: 0;
+	left: 20px;
+}
+.customize-an-collapse > div::before {
+	content: "显示章节导航";
+}
+.customize-an-collapse > div::after {
+	content: "隐藏章节导航";
+}
+.customize-an-collapse > div:hover::after {
+	display: block;
+}
+/*collapse button end*/
