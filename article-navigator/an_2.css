@@ -30,21 +30,23 @@ body {
 	box-sizing: content-box;
 	position: fixed;
 	left: 0;
-	max-width: 240px;
+	width: var(--an-bg-width);
 	top: var(--an-top-distance);
 	/*content height - double border size*/
 	max-height: calc(var(--an-bg-height) - 12px);
 	border: 6px double var(--an-edge-color);
 	/*scroll bar length*/
-	--an-scroll-bar-len: unset;
+	--an-scroll-bar-len: 150px;
 	/*blocks area scrolled height*/
 	--an-blocks-scroll-height: unset;
 	--an-bg-height: calc(100vh - 85px);
+	--an-bg-width: 250px;
 	--an-margin-lr: 10px;
 	--an-margin-tb: 20px;
 	--an-top-distance: 85px;
 	--an-edge-color: darkred;
 	--an-deco-corner-size: 35px;
+	--an-deco-side-size: 25px;
 }
 .customize-an-pseudo-el-layer::before,
 .customize-an-pseudo-el-layer::after {
@@ -55,55 +57,8 @@ body {
 	top: 0;
 	left: 0;
 }
-/*top title start*/
-.customize-an-title {
-	text-align: center;
-	font-size: 18px;
-	color: #666;
-	font-family: KaiTi;
-	line-height: 24px;
-	box-shadow: 0 0 5px #808080;
-	position: relative;
-	/*antiquewhite->bisque->antiquewhite*/
-	background: linear-gradient(to right, #faebd7, #ffe4c4, #faebd7);
-}
-.customize-an-title::after {
-	background: url(../assets/3584aea555db7ef041845aff44f33622_s.png) no-repeat
-		bottom;
-	background-size: contain;
-}
-.customize-an-title > div:first-child {
-	position: absolute;
-	top: 10px;
-	left: 30px
-}
-.customize-an-title > div:last-child {
-	display: inline-block;
-	position: relative;
-	margin: var(--an-margin-tb) 0;
-}
-.customize-an-title > div:last-child::before,
-.customize-an-title > div:last-child::after {
-	content: "";
-	position: absolute;
-	width: 10%;
-	height: 30%;
-}
-.customize-an-title > div:last-child::before {
-	border-top: 1px solid;
-	border-left: 1px solid;
-	top: -3px;
-	left: -5px;
-}
-.customize-an-title > div:last-child::after {
-	border-bottom: 1px solid;
-	border-right: 1px solid;
-	right: -5px;
-	bottom: -3px;
-}
-/*top title end*/
-/*border decoration start*/
-.customize-an-border > div {
+/*corner decoration start*/
+.customize-an-deco-corner > div {
 	position: absolute;
 	background: url(../assets/5fbd3bbb318bec189ee9b717cd3c2f6a_4.png) center;
 	background-size: cover;
@@ -111,50 +66,230 @@ body {
 	height: var(--an-deco-corner-size);
 	opacity: 0.7;
 }
-.customize-an-border-tl {
+.an-deco-corner-tl {
 	top: 0;
 	left: 0;
 	transform: rotate(180deg);
 }
-.customize-an-border-tr {
+.an-deco-corner-tr {
 	top: 0;
 	right: 0;
 	transform: rotate(270deg);
 }
-.customize-an-border-bl {
+.an-deco-corner-bl {
 	bottom: 0;
 	left: 0;
 	transform: rotate(90deg);
 }
-.customize-an-border-br {
+.an-deco-corner-br {
 	bottom: 0;
 	right: 0;
 }
-/*border decoration end*/
+/*corner decoration end*/
+/*top title start*/
+.customize-an-title {
+	text-align: center;
+	line-height: 24px;
+	font-size: 18px;
+	box-shadow: 0 0 5px #808080;
+	position: relative;
+	overflow: hidden;
+}
+.customize-an-title::before {
+	/*antiquewhite->bisque->antiquewhite*/
+	background: linear-gradient(to right, #faebd7, #ffe4c4, #faebd7);
+	z-index: -2;
+}
+.customize-an-title::after {
+	background: url(../assets/3584aea555db7ef041845aff44f33622_s.png) no-repeat
+		bottom;
+	background-size: contain;
+	z-index: -1;
+}
+.customize-an-title:hover > .an-animation:first-child,
+.customize-an-title > .an-animation:first-child.an-title-animation {
+	animation: an-title-animation-1 4s linear 1;
+}
+.customize-an-title:hover > .an-animation:last-child,
+.customize-an-title > .an-animation:last-child.an-title-animation {
+	animation: an-title-animation-2 4s linear 1;
+}
+.customize-an-title > .an-animation {
+	position: absolute;
+	opacity: 1;
+	top: 20px;
+	/*burlywood*/
+	color: #deb887;
+}
+.customize-an-title > .an-animation:first-child {
+	left: 30px;
+	transform: rotate(25deg) scale(1);
+}
+.customize-an-title > .an-animation:last-child {
+	left: 200px;
+}
+@keyframes an-title-animation-1 {
+	0% {
+		top: 20px;
+		left: 30px;
+		opacity: 1;
+		transform: rotate(25deg) scale(1);
+	}
+	25% {
+		top: 5px;
+		left: 72px;
+		opacity: 0.6;
+		transform: rotate(70deg) scale(0.6);
+	}
+	50% {
+		top: 0px;
+		left: 115px;
+		opacity: 0.2;
+		transform: rotate(115deg) scale(0.2);
+	}
+	75% {
+		top: 5px;
+		left: 157px;
+		opacity: 0.6;
+		transform: rotate(160deg) scale(0.6);
+	}
+	100% {
+		top: 20px;
+		left: 200px;
+		opacity: 1;
+		transform: rotate(205deg) scale(1);
+	}
+}
+@keyframes an-title-animation-2 {
+	0% {
+		top: 20px;
+		left: 200px;
+		opacity: 1;
+		transform: rotate(0deg) scale(1);
+	}
+	25% {
+		top: 5px;
+		left: 157px;
+		opacity: 0.6;
+		transform: rotate(45deg) scale(0.6);
+	}
+	50% {
+		top: 0px;
+		left: 115px;
+		opacity: 0.2;
+		transform: rotate(90deg) scale(0.2);
+	}
+	75% {
+		top: 5px;
+		left: 72px;
+		opacity: 0.6;
+		transform: rotate(135deg) scale(0.6);
+	}
+	100% {
+		top: 20px;
+		left: 30px;
+		opacity: 1;
+		transform: rotate(180deg) scale(1);
+	}
+}
+.customize-an-title > .an-title {
+	display: inline-block;
+	position: relative;
+	margin: var(--an-margin-tb) 0;
+	color: #666;
+	font-family: KaiTi;
+}
+.customize-an-title > .an-title::before,
+.customize-an-title > .an-title::after {
+	content: "";
+	position: absolute;
+	width: 10%;
+	height: 30%;
+}
+.customize-an-title > .an-title::before {
+	border-top: 1px solid;
+	border-left: 1px solid;
+	top: -3px;
+	left: -5px;
+}
+.customize-an-title > .an-title::after {
+	border-bottom: 1px solid;
+	border-right: 1px solid;
+	right: -5px;
+	bottom: -3px;
+}
+.customize-an-title > .an-title > div:last-child {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	left: calc(50% - 25px);
+	top: 50%;
+	/*lightyellow*/
+	background: #ffffe0;
+	opacity: 0.5;
+	z-index: -1;
+	border-radius: 50%;
+}
+/*top title end*/
 /*scroller start*/
 .customize-an-blocks > .customize-an-scroller {
 	position: absolute;
 	width: 6px;
-	height: 100%;
-	right: 1px;
-	top: 0;
+	height: calc(100% - 4px);
+	background: rgba(255, 228, 196, 0.6);
+	right: 0;
+	top: 2px;
 	opacity: 0;
 	transition: opacity 0.5s linear;
 	z-index: 1;
 }
 .customize-an-scroller-progress {
-	width: 4px;
+	width: inherit;
 	height: var(--an-scroll-bar-len);
-	background: #666;
-	opacity: 0.8;
-	border-radius: 4px;
+	background: #808080;
+	opacity: 0.5;
+	border-radius: 6px;
 	cursor: pointer;
+	transition: background 0.5s linear;
+}
+.customize-an-scroller-progress:hover {
+	background: #86534e;
 }
 .customize-an-scroller:hover,
 .customize-an-scroller.customize-an-scroller-show {
 	opacity: 1;
 }
 /*scroller end*/
+/*side decoration start*/
+.an-deco-side-l,
+.an-deco-side-r {
+	position: absolute;
+	top: 0;
+	width: calc(var(--an-bg-width) / 2);
+	height: 100%;
+	background-image: url(../assets/65e1fc8cd079ede840c85ce02cee463e_s_3.png);
+	background-repeat: no-repeat;
+	background-size: cover;
+	transition: all 0.5s linear;
+}
+.an-deco-side-l {
+	/*total width/2 - side decoration width*/
+	left: calc(var(--an-deco-side-size) - calc(var(--an-bg-width) / 2));
+	background-position-x: right;
+}
+.an-deco-side-r {
+	right: calc(var(--an-deco-side-size) - calc(var(--an-bg-width) / 2));
+	background-position-x: left;
+}
+.an-deco-side-l.an-deco-side-close,
+#customize-article-navigator.customize-an-hide-all .an-deco-side-l {
+	left: 0;
+}
+.an-deco-side-r.an-deco-side-close,
+#customize-article-navigator.customize-an-hide-all .an-deco-side-r {
+	right: 0;
+}
+/*side decoration end*/
 /*nav block start*/
 .customize-an-blocks {
 	text-align: center;
@@ -185,12 +320,13 @@ body {
 .customize-an-block {
 	position: relative;
 	margin-bottom: 5px;
+	margin-left: var(--an-deco-side-size);
+	margin-right: var(--an-deco-side-size);
 }
 .customize-an-block > div {
-	margin: 0 var(--an-margin-lr);
-	/*! border-bottom: 1px solid #ccc; */
+	/*! margin: 0 var(--an-margin-lr); */
 	box-sizing: content-box;
-	padding: 5px;
+	padding: 5px 0;
 }
 .customize-an-block-title {
 	margin-bottom: 5px;
@@ -207,6 +343,14 @@ body {
 .customize-an-block-title > div > span:nth-child(2) {
 	font-family: Calibri;
 	color: #666;
+}
+.customize-an-block-title > span:first-child {
+	margin: 0 3px;
+	/*darkseagreen*/
+	color: #8fbc8f;
+	display: inline-block;
+	transform: rotateY(180deg);
+	opacity: 0.5;
 }
 .customize-an-block-title > span:nth-last-child(2) {
 	margin: 0 3px;
@@ -238,8 +382,7 @@ body {
 	box-shadow: 0 0 5px #808080;
 }
 .customize-an-collapse::after {
-    z-index: -1;
-	
+	z-index: -1;
 }
 .customize-an-collapse > div {
 	display: inline-block;
@@ -280,4 +423,5 @@ body {
 .customize-an-collapse > div:hover::after {
 	display: block;
 }
+
 /*collapse button end*/
