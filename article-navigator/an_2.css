@@ -20,7 +20,7 @@ html {
 	height: 100%;
 }
 body {
-	background: url(../../Assets/bg/6fcd879e9b4d0a6084d0306a5cf2d31e.jpg) center;
+	background: url(../../Assets/bg/2020-09-03-183452.jpg) center;
 	background-size: cover;
 }
 #customize-article-navigator {
@@ -46,7 +46,7 @@ body {
 	--an-top-distance: 85px;
 	--an-edge-color: darkred;
 	--an-deco-corner-size: 35px;
-	--an-deco-side-size: 25px;
+	--an-deco-side-size: 20px;
 }
 .customize-an-pseudo-el-layer::before,
 .customize-an-pseudo-el-layer::after {
@@ -234,7 +234,7 @@ body {
 /*scroller start*/
 .customize-an-blocks > .customize-an-scroller {
 	position: absolute;
-	width: 6px;
+	width: 8px;
 	height: calc(100% - 4px);
 	background: rgba(255, 228, 196, 0.6);
 	right: 0;
@@ -242,13 +242,14 @@ body {
 	opacity: 0;
 	transition: opacity 0.5s linear;
 	z-index: 1;
+	border-radius: 8px;
 }
 .customize-an-scroller-progress {
 	width: inherit;
 	height: var(--an-scroll-bar-len);
-	background: #808080;
-	opacity: 0.5;
-	border-radius: 6px;
+	background: #666;
+	opacity: 0.7;
+	border-radius: inherit;
 	cursor: pointer;
 	transition: background 0.5s linear;
 }
@@ -271,6 +272,8 @@ body {
 	background-repeat: no-repeat;
 	background-size: cover;
 	transition: all 0.5s linear;
+	border: 2px solid #86534e;
+	box-sizing: content-box;
 }
 .an-deco-side-l {
 	/*total width/2 - side decoration width*/
@@ -283,11 +286,11 @@ body {
 }
 .an-deco-side-l.an-deco-side-close,
 #customize-article-navigator.customize-an-hide-all .an-deco-side-l {
-	left: 0;
+	left: -2px;
 }
 .an-deco-side-r.an-deco-side-close,
 #customize-article-navigator.customize-an-hide-all .an-deco-side-r {
-	right: 0;
+	right: -2px;
 }
 /*side decoration end*/
 /*nav block start*/
@@ -303,8 +306,12 @@ body {
 }
 .customize-an-blocks::before {
 	/*beige*/
-	background: rgba(255, 228, 196, 0.3);
+	/*! background: rgba(255, 228, 196, 0.3); */
+	background: rgba(30, 30, 30, 0.8);
 	z-index: -1;
+}
+body.body-bg-night .customize-an-blocks::before {
+	background: rgba(30, 30, 30, 0.8);
 }
 .customize-an-blocks::after {
 	background-image: url(../assets/f5318eb1f99b3688ad222c565d7c8ffd.png);
@@ -319,12 +326,10 @@ body {
 }
 .customize-an-block {
 	position: relative;
+	margin: 0 calc(var(--an-deco-side-size) + 2px);
 	margin-bottom: 5px;
-	margin-left: var(--an-deco-side-size);
-	margin-right: var(--an-deco-side-size);
 }
 .customize-an-block > div {
-	/*! margin: 0 var(--an-margin-lr); */
 	box-sizing: content-box;
 	padding: 5px 0;
 }
