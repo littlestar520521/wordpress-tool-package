@@ -42,7 +42,18 @@ const nav2 = [
 		list: ["2-3", "2-4"],
 	},
 ];
-
+/**
+ * 视觉切换逻辑：
+ * 初始/隐藏状态[an-hide-all, an-close-side]
+ * |
+ * 移除[an-hide-all]->0.5s->移除[an-close-side]->0.5s->添加[an-show-all]
+ * |
+ * 正常显示状态[an-show-all]
+ * |
+ * 移除[an-show-all]->添加[an-close-side]->0.5s->添加[an-hide-all]
+ * |
+ * 隐藏状态[an-hide-all, an-close-side]
+ */
 /**
  * 滚动条逻辑：窗口高度、页面总长度都是常量
  * 滚动条长度/窗口高度=窗口高度/页面总长度
