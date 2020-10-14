@@ -68,77 +68,128 @@ var anRoot = document.getElementById("customize-article-navigator");
 /**
  * nav blocks area
  */
-var blockArea = document.querySelector(".customize-an-block-container");
+var blockArea = document.querySelector(".an-block-container");
 /**
  * scroll bar
  */
-var scrollBar = document.querySelector(".customize-an-scroller-progress");
+var scrollBar = document.querySelector(".an-scroller-progress");
 /**
  * css customize properties
  */
-var cssPros = ["--an-scroll-bar-len", "--an-blocks-scroll-height"];
-/**
- * block area container height
- */
-const BLOCKS_CONTAINER_HEIGHT = parseInt(
-	window.getComputedStyle(blockArea.parentElement).height.match(/\d*/)
-);
-/**
- * total block area height
- */
-const BLOCKS_HEIGHT = parseInt(
-	window.getComputedStyle(blockArea).height.match(/\d*/)
-);
-/**
- * scroll bar container length
- */
-const SCROLL_BAR_CONTAINER_LEN = parseInt(
-	window.getComputedStyle(scrollBar.parentElement).height.match(/\d*/)
-);
-/**
- * scroll bar length
- */
-const SCROLL_BAR_LEN =
-	(SCROLL_BAR_CONTAINER_LEN * BLOCKS_CONTAINER_HEIGHT) / BLOCKS_HEIGHT;
+var cssPros = [
+	"--an-scroll-bar-len",
+	"--an-scroll-bar-move",
+	"--an-blocks-area-move",
+];
+
+//use closures to protect core private variables
+function coreSizeValue() {
+	//values cannot be rewrite maliciously out of the closure
+	var list = {
+			//container height + self height
+			blocks: [0, 0],
+			//container length + self length
+			bar: [0, 0],
+		},
+		blocksHeight = {
+			/**
+			 * blocks area container height
+			 */
+			get con() {
+				return list.blocks[0];
+			},
+			/**
+			 * total blocks area height
+			 */
+			get self() {
+				return list.blocks[1];
+			},
+		},
+		barLength = {
+			/**
+			 * scroll bar container length
+			 */
+			get con() {
+				return list.bar[0];
+			},
+			/**
+			 * scroll bar length
+			 */
+			get self() {
+				return list.bar[1];
+			},
+		},
+		refresh = function () {
+			list.blocks[0] = parseInt(
+				window
+					.getComputedStyle(blockArea.parentElement)
+					.height.match(/\d*/)
+			);
+			list.blocks[1] = parseInt(
+				window.getComputedStyle(blockArea).height.match(/\d*/)
+			);
+			list.bar[0] = parseInt(
+				window
+					.getComputedStyle(scrollBar.parentElement)
+					.height.match(/\d*/)
+			);
+			list.bar[1] = (list.bar[0] * list.blocks[0]) / list.blocks[1];
+		};
+	return {
+		blocks: blocksHeight,
+		bar: barLength,
+		update: refresh,
+	};
+}
+var sizeObj = coreSizeValue();
+//initialize the size data
+sizeObj.update();
+
 /**
  * calculate the block area move distance
  * @param {number} barMove scroll bar move distance
  */
 function getBlocksMoveLength(barMove) {
 	return (
-		(barMove * (BLOCKS_HEIGHT - BLOCKS_CONTAINER_HEIGHT)) /
-		(SCROLL_BAR_CONTAINER_LEN - SCROLL_BAR_LEN)
+		(barMove * (sizeObj.blocks.self - sizeObj.blocks.con)) /
+		(sizeObj.bar.con - sizeObj.bar.self)
 	);
 }
 
-anRoot.style.setProperty(cssPros[0], SCROLL_BAR_LEN + "px");
+anRoot.style.setProperty(cssPros[0], sizeObj.bar.self + "px");
 
 /**
- * store last mouse location
+ * store last mouse location & deltaY value & max scroll bar moved length
  */
-var mouseLoc = {
-	y: 0,
+var temps = {
+	mY: 0,
+	wY: 0,
+	d: sizeObj.bar.con - sizeObj.bar.self
 };
-/**
- * a pointer that refer to the event listener function
- */
-var listenerRef;
-anRoot.addEventListener("mousedown", function (e) {
-	this.style.background = "#333";
-	mouseLoc.y = e.clientY;
-	listenerRef = scrollBarMove.bind(this, e);
-	this.addEventListener("mousemove", listenerRef);
+
+blockArea.addEventListener("wheel", function (e) {
+	wheelHandler(e);
 });
-anRoot.addEventListener("mouseup", function (e) {
-	this.style.background = "#666";
-	this.removeEventListener("mousemove", listenerRef);
+scrollBar.parentElement.addEventListener("wheel", function (e) {
+	wheelHandler(e);
 });
-anRoot.addEventListener("wheel", function () {});
 
 /**
- *
- * @param {MouseEvent} ev
+ * wheel event handler
+ * @param {WheelEvent} e
  */
-function scrollBarMove(ev) {
-	
+function wheelHandler(e) {
+	//set the total deltaY value as scroll bar moved length
+	//temps.wY + e.deltaY > temps.d || temps.wY < -e.deltaY
+	if (temps.wY + e.deltaY <= temps.d && temps.wY >= -e.deltaY) {
+		temps.wY += e.deltaY;
+	} else if (temps.wY < temps.d && temps.wY > -e.deltaY) {
+		temps.wY = temps.d;
+	} else if (temps.wY < -e.deltaY && temps.wY > 0) {
+		temps.wY = 0;
+	} else {
+		return;
+	}
+	anRoot.style.setProperty(cssPros[1], temps.wY + "px");
+	anRoot.style.setProperty(cssPros[2], getBlocksMoveLength(temps.wY) + "px");
 }

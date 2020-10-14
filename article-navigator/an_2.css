@@ -38,15 +38,19 @@ body {
 	max-height: calc(var(--an-bg-height) - 12px);
 	border: 6px double var(--an-edge-color);
 	/*scroll bar length*/
-	--an-scroll-bar-len: 150px;
-	/*blocks area scrolled height*/
-	--an-blocks-scroll-height: unset;
+	--an-scroll-bar-len: unset;
+	/*scroll bar moved length*/
+	--an-scroll-bar-move: unset;
+	/*blocks area moved height*/
+	--an-blocks-area-move: unset;
 	--an-bg-height: calc(100vh - 85px);
 	--an-bg-width: 250px;
 	--an-margin-lr: 10px;
 	--an-margin-tb: 20px;
+	/*site top banner height*/
 	--an-top-distance: 85px;
-	--an-edge-color: darkred;
+	/*darkred*/
+	--an-edge-color: #8b0000;
 	--an-bottom-ledge-size: 8px;
 	--an-bottom-size: 35px;
 	--an-deco-side-size: 20px;
@@ -288,8 +292,10 @@ body.body-bg-night .an-blocks::before {
 	border-radius: 8px;
 }
 .an-scroller-progress {
+	position: inherit;
 	width: inherit;
 	height: var(--an-scroll-bar-len);
+	top: var(--an-scroll-bar-move);
 	background: #666;
 	opacity: 0.5;
 	border-radius: inherit;
@@ -355,12 +361,11 @@ body.body-bg-night .an-blocks::before {
 }
 .an-blocks > .an-block-container {
 	position: relative;
-	bottom: var(--an-blocks-scroll-height);
+	bottom: var(--an-blocks-area-move);
 }
 .an-block {
 	position: relative;
-	margin: 0 calc(var(--an-deco-side-size) + 2px);
-	margin-bottom: 5px;
+	margin: 0 calc(var(--an-deco-side-size) + 2px) 5px;
 }
 .an-block > div {
 	padding: 5px 0;
