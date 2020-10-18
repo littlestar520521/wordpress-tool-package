@@ -68,11 +68,14 @@ var anRoot = document.getElementById("customize-article-navigator");
 /**
  * nav blocks area
  */
-var blockArea = document.querySelector(".an-block-container");
+var blockArea = document.querySelector(".an-block-container"),
+	blockAreaCon = blockArea.parentElement;
 /**
  * scroll bar
  */
-var scrollBar = document.querySelector(".an-scroller-progress");
+var scrollBar = document.querySelector(".an-scroller-progress"),
+	scrollBarCon = scrollBar.parentElement;
+
 /**
  * css customize properties
  */
@@ -80,6 +83,15 @@ var cssPros = [
 	"--an-scroll-bar-len",
 	"--an-scroll-bar-move",
 	"--an-blocks-area-move",
+];
+/**
+ * visibility class list
+ */
+var vClass = [
+	"an-hide-all",
+	"an-close-side",
+	"an-show-all",
+	"an-scroller-show",
 ];
 
 //use closures to protect core private variables
@@ -90,6 +102,24 @@ function coreSizeValue() {
 			blocks: [0, 0],
 			//container length + self length
 			bar: [0, 0],
+			//window size, width + height
+			win: [0, 0],
+			//an size, width + min height
+			an: [262, 119],
+		},
+		anSize = {
+			/**
+			 * an width
+			 */
+			get width() {
+				return list.an[0];
+			},
+			/**
+			 * an min height
+			 */
+			get minHeight() {
+				return list.an[1];
+			},
 		},
 		blocksHeight = {
 			/**
@@ -119,25 +149,42 @@ function coreSizeValue() {
 				return list.bar[1];
 			},
 		},
+		winSize = {
+			/**
+			 * window width
+			 */
+			get width() {
+				return list.win[0];
+			},
+			/**
+			 * window height
+			 */
+			get height() {
+				return list.win[1];
+			},
+		},
 		refresh = function () {
-			list.blocks[0] = parseInt(
-				window
-					.getComputedStyle(blockArea.parentElement)
-					.height.match(/\d*/)
-			);
-			list.blocks[1] = parseInt(
-				window.getComputedStyle(blockArea).height.match(/\d*/)
-			);
-			list.bar[0] = parseInt(
-				window
-					.getComputedStyle(scrollBar.parentElement)
-					.height.match(/\d*/)
-			);
-			list.bar[1] = (list.bar[0] * list.blocks[0]) / list.blocks[1];
+			var a = window
+					.getComputedStyle(blockAreaCon)
+					.height.match(/\d*/)[0],
+				b = window.getComputedStyle(blockArea).height.match(/\d*/)[0],
+				c = window
+					.getComputedStyle(scrollBarCon)
+					.height.match(/\d*/)[0];
+			list.blocks[0] = a.length > 0 ? parseInt(a) : 0;
+			list.blocks[1] = b.length > 0 ? parseInt(b) : 0;
+			list.bar[0] = c.length > 0 ? parseInt(c) : 0;
+			list.bar[1] = list.blocks[1]
+				? (list.bar[0] * list.blocks[0]) / list.blocks[1]
+				: 0;
+			list.win[0] = window.innerWidth;
+			list.win[1] = window.innerHeight;
 		};
 	return {
+		an: anSize,
 		blocks: blocksHeight,
 		bar: barLength,
+		win: winSize,
 		update: refresh,
 	};
 }
@@ -146,50 +193,170 @@ var sizeObj = coreSizeValue();
 sizeObj.update();
 
 /**
- * calculate the block area move distance
- * @param {number} barMove scroll bar move distance
+ * store some temporary data
  */
-function getBlocksMoveLength(barMove) {
+var temps = {
+	/**
+	 * last wheel time
+	 */
+	t: 0,
+	/**
+	 * total deltaY value
+	 */
+	y: 0,
+	/**
+	 * max scroll bar moved length
+	 */
+	d: sizeObj.bar.con - sizeObj.bar.self,
+	/**
+	 * wheel event triggered observer
+	 */
+	wob: 0,
+	/**
+	 * resize event throttler
+	 */
+	rt: 0
+};
+
+/**
+ * calculate the block area move distance
+ * @param {number} move scroll bar moved length
+ */
+function getBlocksMoveLength(move) {
 	return (
-		(barMove * (sizeObj.blocks.self - sizeObj.blocks.con)) /
+		(move * (sizeObj.blocks.self - sizeObj.blocks.con)) /
 		(sizeObj.bar.con - sizeObj.bar.self)
 	);
 }
-
-anRoot.style.setProperty(cssPros[0], sizeObj.bar.self + "px");
-
 /**
- * store last mouse location & deltaY value & max scroll bar moved length
+ * set scroll bar length
+ * @param {number} len length value
  */
-var temps = {
-	mY: 0,
-	wY: 0,
-	d: sizeObj.bar.con - sizeObj.bar.self
-};
-
-blockArea.addEventListener("wheel", function (e) {
-	wheelHandler(e);
-});
-scrollBar.parentElement.addEventListener("wheel", function (e) {
-	wheelHandler(e);
-});
-
+function setScrollBarLen(len) {
+	anRoot.style.setProperty(cssPros[0], len + "px");
+}
+/**
+ * set scroll bar y position
+ * @param {number} move scroll bar moved length
+ */
+function setScrollBarPos(move) {
+	anRoot.style.setProperty(cssPros[1], move + "px");
+}
+/**
+ * set blocks area y position
+ * @param {number} move scroll bar moved length
+ */
+function setBlocksAreaPos(move) {
+	anRoot.style.setProperty(cssPros[2], getBlocksMoveLength(move) + "px");
+}
+/**
+ * show navigator
+ */
+function showNavigator() {
+	var t = anRoot.classList;
+	t.remove(vClass[0]);
+	setTimeout(function () {
+		t.remove(vClass[1]);
+		setTimeout(function () {
+			t.add(vClass[2]);
+		}, 500);
+	}, 500);
+}
+/**
+ * close navigator
+ */
+function closeNavigator() {
+	var t = anRoot.classList;
+	t.remove(vClass[2]);
+	t.add(vClass[1]);
+	setTimeout(function () {
+		t.add(vClass[0]);
+	}, 500);
+}
 /**
  * wheel event handler
- * @param {WheelEvent} e
+ * @param {WheelEvent} e event object
  */
 function wheelHandler(e) {
 	//set the total deltaY value as scroll bar moved length
-	//temps.wY + e.deltaY > temps.d || temps.wY < -e.deltaY
-	if (temps.wY + e.deltaY <= temps.d && temps.wY >= -e.deltaY) {
-		temps.wY += e.deltaY;
-	} else if (temps.wY < temps.d && temps.wY > -e.deltaY) {
-		temps.wY = temps.d;
-	} else if (temps.wY < -e.deltaY && temps.wY > 0) {
-		temps.wY = 0;
+	//temps.y + e.deltaY > temps.d || temps.y < -e.deltaY
+	if (temps.y + e.deltaY <= temps.d && temps.y >= -e.deltaY) {
+		temps.y += e.deltaY;
+	} else if (temps.y < temps.d && temps.y > -e.deltaY) {
+		temps.y = temps.d;
+	} else if (temps.y < -e.deltaY && temps.y > 0) {
+		temps.y = 0;
 	} else {
 		return;
 	}
-	anRoot.style.setProperty(cssPros[1], temps.wY + "px");
-	anRoot.style.setProperty(cssPros[2], getBlocksMoveLength(temps.wY) + "px");
+	setScrollBarPos(temps.y);
+	setBlocksAreaPos(temps.y);
 }
+/**
+ * window resize event handler
+ */
+function resizeHandler() {
+	sizeObj.update();
+	if (sizeObj.win.width < sizeObj.an.width + 20 || sizeObj.win.height < sizeObj.an.minHeight + 25) {
+		//output error
+		console.error('window size is too small, the article navigator cannot be shown completely');
+		//close the navigator
+		if (anRoot.classList.contains(vClass[2])) {
+			closeNavigator();
+		}
+		return;
+	}
+	if (!sizeObj.bar.self) return;
+	var rate = temps.y / temps.d;
+	temps.d = sizeObj.bar.con - sizeObj.bar.self;
+	temps.y = rate * temps.d;
+	setScrollBarLen(sizeObj.bar.self);
+	setScrollBarPos(temps.y);
+	setBlocksAreaPos(temps.y);
+	console.log(`window has been resized, current size data is [${[sizeObj.blocks.con, sizeObj.bar.con, sizeObj.bar.self]}]`);
+}
+blockArea.addEventListener("wheel", function (e) {
+	scrollBarCon.classList.add(vClass[3]);
+	temps.t = new Date().getTime();
+	wheelHandler(e);
+});
+scrollBarCon.addEventListener("wheel", function (e) {
+	wheelHandler(e);
+});
+blockAreaCon.addEventListener("mouseover", function () {
+	//check whether the wheel event is triggered every 2s
+	temps.wob = setInterval(function () {
+		if (new Date().getTime() - temps.t > 2000) {
+			scrollBarCon.classList.remove(vClass[3]);
+		}
+	}, 2000);
+});
+blockAreaCon.addEventListener("mouseout", function () {
+	scrollBarCon.classList.remove(vClass[3]);
+	clearInterval(temps.wob);
+});
+/**
+ * shift visibility button
+ */
+document.querySelector(".bottom-cube-front>div").addEventListener("click", function () {
+	//close if has 'an-show-all' class
+	if (anRoot.classList.contains(vClass[2])) {
+		closeNavigator();
+	}
+	//show it if has both 'an-hide-all' and 'an-close-side' class
+	else if (anRoot.classList.contains(vClass[0]) && anRoot.classList.contains(vClass[1])) {
+		showNavigator();
+	}
+});
+//relayout and reposition scroll bar & blocks area when window is resized
+window.addEventListener("resize", function () {
+	if (!temps.rt) {
+		temps.rt = setTimeout(function () {
+			temps.rt = 0;
+			resizeHandler();
+		}, 100);
+	}	
+});
+
+
+setScrollBarLen(sizeObj.bar.self);
