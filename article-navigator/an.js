@@ -92,6 +92,7 @@ var vClass = [
 	"an-close-side",
 	"an-show-all",
 	"an-scroller-show",
+	"an-no-equal-height"
 ];
 
 //use closures to protect core private variables
@@ -164,21 +165,27 @@ function coreSizeValue() {
 			},
 		},
 		refresh = function () {
-			var a = window
-					.getComputedStyle(blockAreaCon)
-					.height.match(/\d*/)[0],
-				b = window.getComputedStyle(blockArea).height.match(/\d*/)[0],
-				c = window
-					.getComputedStyle(scrollBarCon)
-					.height.match(/\d*/)[0];
-			list.blocks[0] = a.length > 0 ? parseInt(a) : 0;
-			list.blocks[1] = b.length > 0 ? parseInt(b) : 0;
-			list.bar[0] = c.length > 0 ? parseInt(c) : 0;
+			// var a = window
+			// 		.getComputedStyle(blockAreaCon)
+			// 		.height.match(/\d*/)[0],
+			// 	b = window.getComputedStyle(blockArea).height.match(/\d*/)[0],
+			// 	c = window
+			// 		.getComputedStyle(scrollBarCon)
+			// 		.height.match(/\d*/)[0];
+			// list.blocks[0] = a.length > 0 ? parseInt(a) : 0;
+			// list.blocks[1] = b.length > 0 ? parseInt(b) : 0;
+			// list.bar[0] = c.length > 0 ? parseInt(c) : 0;
+			list.blocks[0] = blockAreaCon.getBoundingClientRect().height;
+			list.blocks[1] = blockArea.getBoundingClientRect().height;
+			list.bar[0] = scrollBarCon.getBoundingClientRect().height;
 			list.bar[1] = list.blocks[1]
 				? (list.bar[0] * list.blocks[0]) / list.blocks[1]
 				: 0;
 			list.win[0] = window.innerWidth;
 			list.win[1] = window.innerHeight;
+			console.table(list.blocks);
+			console.table(list.bar);
+			console.table(list.win);
 		};
 	return {
 		an: anSize,
@@ -215,7 +222,11 @@ var temps = {
 	/**
 	 * resize event throttler
 	 */
-	rt: 0
+	rt: 0,
+	/**
+	 * indicate that if the window is resized when the navigator is closed
+	 */
+	rc: false
 };
 
 /**
@@ -250,6 +261,12 @@ function setBlocksAreaPos(move) {
 	anRoot.style.setProperty(cssPros[2], getBlocksMoveLength(move) + "px");
 }
 /**
+ * check if the scroll bar is needed, when blocks area height <= blocks area container height, the scroll bar is not needed, true=needed | false=not needed
+ */
+function isScrollBarNeeded() {
+	return sizeObj.blocks.con < sizeObj.blocks.self ? true : false;
+}
+/**
  * show navigator
  */
 function showNavigator() {
@@ -274,6 +291,42 @@ function closeNavigator() {
 	}, 500);
 }
 /**
+ * check if the navigator is hidden or shown, true=shown | false=hidden
+ */
+function isNavVisible() {
+	if (anRoot.classList.contains(vClass[2])) {
+		return true;
+	}
+	if (anRoot.classList.contains(vClass[0]) && anRoot.classList.contains(vClass[1])) {
+		return false;
+	}
+}
+/**
+ * relayout blocks area and scroll bar after window being resized
+ */
+function reLayout() {
+	sizeObj.update();
+	if (sizeObj.win.width < sizeObj.an.width + 20 || sizeObj.win.height < sizeObj.an.minHeight + 25) {
+		//output error
+		console.error('window size is too small, the article navigator cannot be shown completely');
+		//close the navigator
+		isNavVisible() ? closeNavigator() : {};
+		return;
+	}
+	if (!sizeObj.bar.self) return;
+	if (isScrollBarNeeded()) {
+		var rate = temps.y / temps.d;
+		temps.d = sizeObj.bar.con - sizeObj.bar.self;
+		temps.y = rate * temps.d;
+		setScrollBarLen(sizeObj.bar.self);
+		setScrollBarPos(temps.y);
+		setBlocksAreaPos(temps.y);
+		scrollBarCon.classList.add(vClass[4]);
+	} else {
+		scrollBarCon.classList.remove(vClass[4]);
+	}
+}
+/**
  * wheel event handler
  * @param {WheelEvent} e event object
  */
@@ -296,34 +349,30 @@ function wheelHandler(e) {
  * window resize event handler
  */
 function resizeHandler() {
-	sizeObj.update();
-	if (sizeObj.win.width < sizeObj.an.width + 20 || sizeObj.win.height < sizeObj.an.minHeight + 25) {
-		//output error
-		console.error('window size is too small, the article navigator cannot be shown completely');
-		//close the navigator
-		if (anRoot.classList.contains(vClass[2])) {
-			closeNavigator();
-		}
+	//if the navigator is hidden, the sizeObj.update method cannot get its real size
+	if (!isNavVisible()) {
+		temps.rc = true;
 		return;
 	}
-	if (!sizeObj.bar.self) return;
-	var rate = temps.y / temps.d;
-	temps.d = sizeObj.bar.con - sizeObj.bar.self;
-	temps.y = rate * temps.d;
-	setScrollBarLen(sizeObj.bar.self);
-	setScrollBarPos(temps.y);
-	setBlocksAreaPos(temps.y);
-	console.log(`window has been resized, current size data is [${[sizeObj.blocks.con, sizeObj.bar.con, sizeObj.bar.self]}]`);
+	reLayout();
 }
 blockArea.addEventListener("wheel", function (e) {
 	scrollBarCon.classList.add(vClass[3]);
-	temps.t = new Date().getTime();
+	//temps.t = new Date().getTime();
+	if (temps.wob) {
+		clearTimeout(temps.wob);
+	}
+	temps.wob = setTimeout(function () {
+		scrollBarCon.classList.remove(vClass[3]);
+		temps.wob = 0;
+	}, 2000);
 	wheelHandler(e);
 });
 scrollBarCon.addEventListener("wheel", function (e) {
 	wheelHandler(e);
 });
-blockAreaCon.addEventListener("mouseover", function () {
+//TODO:how to check whether the wheel event is triggered?
+/* blockAreaCon.addEventListener("mouseover", function () {
 	//check whether the wheel event is triggered every 2s
 	temps.wob = setInterval(function () {
 		if (new Date().getTime() - temps.t > 2000) {
@@ -334,29 +383,46 @@ blockAreaCon.addEventListener("mouseover", function () {
 blockAreaCon.addEventListener("mouseout", function () {
 	scrollBarCon.classList.remove(vClass[3]);
 	clearInterval(temps.wob);
-});
+}); */
 /**
  * shift visibility button
  */
 document.querySelector(".bottom-cube-front>div").addEventListener("click", function () {
 	//close if has 'an-show-all' class
-	if (anRoot.classList.contains(vClass[2])) {
+	if (isNavVisible()) {
 		closeNavigator();
 	}
 	//show it if has both 'an-hide-all' and 'an-close-side' class
-	else if (anRoot.classList.contains(vClass[0]) && anRoot.classList.contains(vClass[1])) {
+	else if (!isNavVisible()) {
 		showNavigator();
+		//if the window has been resized, relayout the blocks area and scroll bar
+		if (temps.rc) {
+			reLayout();
+			temps.rc = false;
+		}
 	}
 });
 //relayout and reposition scroll bar & blocks area when window is resized
+//TODO:how to obtain the final size, instead of mid status?
 window.addEventListener("resize", function () {
-	if (!temps.rt) {
+	//solution1: this way only handle the first resize event in every 500ms
+	/* if (!temps.rt) {
 		temps.rt = setTimeout(function () {
 			temps.rt = 0;
 			resizeHandler();
-		}, 100);
-	}	
+		}, 500);
+	}	 */
+	//solution2: if multiple resize event were triggered in 1000ms, only the last one can be handled
+	if (temps.rt) {
+		clearTimeout(temps.rt);
+	}
+	temps.rt = setTimeout(function () {
+		resizeHandler();
+		temps.rt = 0;
+	}, 1000);
 });
 
-
-setScrollBarLen(sizeObj.bar.self);
+if (isScrollBarNeeded()) {
+	setScrollBarLen(sizeObj.bar.self);
+	scrollBarCon.classList.add(vClass[4]);
+}

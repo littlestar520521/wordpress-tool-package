@@ -135,7 +135,7 @@ body.body-bg-night .an-blocks::before {
 	display: block;
 }
 /*visibility end*/
-/*t1op title start*/
+/*top title start*/
 .an-top {
 	text-align: center;
 	line-height: 24px;
@@ -302,11 +302,11 @@ body.body-bg-night .an-blocks::before {
 	cursor: pointer;
 	transition: background 0.5s linear;
 }
-.an-scroller-progress:hover {
+.an-scroller.an-no-equal-height > .an-scroller-progress:hover {
 	background: #86534e;
 }
-.an-scroller:hover,
-.an-scroller.an-scroller-show {
+.an-scroller.an-no-equal-height:hover,
+.an-scroller.an-no-equal-height.an-scroller-show {
 	opacity: 1;
 }
 /*scroller end*/
