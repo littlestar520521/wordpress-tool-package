@@ -11,9 +11,6 @@ a {
 a {
 	text-decoration: none;
 }
-ul {
-	list-style: none;
-}
 body,
 html {
 	width: 100%;
@@ -33,7 +30,8 @@ body {
 	position: fixed;
 	left: 0;
 	width: var(--an-bg-width);
-	top: var(--an-top-distance);
+	bottom: 0;
+	/*! top: var(--an-top-distance); */
 	/*content height - double border size*/
 	max-height: calc(var(--an-bg-height) - 12px);
 	border: 6px double var(--an-edge-color);
@@ -48,7 +46,7 @@ body {
 	--an-margin-lr: 10px;
 	--an-margin-tb: 20px;
 	/*site top banner height*/
-	--an-top-distance: 85px;
+	/*! --an-top-distance: 85px; */
 	/*darkred*/
 	--an-edge-color: #8b0000;
 	--an-bottom-ledge-size: 8px;
@@ -121,10 +119,12 @@ body.body-bg-night .an-blocks::before {
 	display: block;
 }
 #customize-article-navigator.an-hide-all {
-	top: calc(
+	/*! top: calc(
 		100vh - 24px - var(--an-margin-tb) * 2 - 12px -
 			var(--an-bottom-ledge-size) - var(--an-bottom-size)
-	);
+	); */
+	bottom: 10px;
+	left: 10px
 }
 #customize-article-navigator.an-hide-all .an-blocks {
 	display: none;
@@ -444,6 +444,7 @@ body.body-bg-night .an-blocks::before {
 .an-nav li {
 	line-height: 1.5;
 	font-size: 0.9rem;
+	list-style: none;
 }
 .an-nav a {
 	color: #bc8282;

@@ -65,9 +65,12 @@ function createLiString(list) {
         })
     }
     else if (!u_en && typeof list[0] == 'object') {
-        list.forEach(function (item) {
-            str = str.concat(`<li><a href="#${item.m}">${item.t}</a></li>`);
-        })
+        var ks = Object.keys(list[0]);
+        if (ks.includes('m') && ks.includes('t')) {
+            list.forEach(function (item) {
+                str = str.concat(`<li><a href="#${item.m}">${item.t}</a></li>`);
+            })
+        }
     }
     return str;
 }

@@ -98,9 +98,12 @@
                         })
                     }
                     else if (!u_en && typeof list[0] == 'object') {
-                        list.forEach(function (item) {
-                            str = str.concat(`<li><a href="#${item.m}">${item.t}</a></li>`);
-                        })
+                        var ks = Object.keys(list[0]);
+                        if (ks.includes('m') && ks.includes('t')) {
+                            list.forEach(function (item) {
+                                str = str.concat(`<li><a href="#${item.m}">${item.t}</a></li>`);
+                            })
+                        }
                     }
                     return str;
                 }
@@ -112,7 +115,7 @@
                 blockArea.appendChild(div_hack);
             },
             scrollBar() {
-                var sizeObj = coreSizeValue();
+                var sizeObj = this.coreSizeValue();
                 sizeObj.update();
                 var temps = {
                     y: 0,
@@ -223,7 +226,7 @@
                     if (isNavVisible()) {
                         closeNavigator();
                     }
-                    else if (!isNavVisible()) {
+                    else {
                         showNavigator();
                         if (temps.rc) {
                             reLayout();
@@ -246,6 +249,7 @@
                 }
             }
         };
+    anRoot.classList.remove('customize-mobile-hidden');
     an.navListRender(n);
     an.scrollBar();
 }(navData))
