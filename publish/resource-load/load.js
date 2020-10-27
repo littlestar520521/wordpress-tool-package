@@ -6,7 +6,7 @@
 	if (t.startsWith("Access denied")) return;
 	if (h.startsWith(`${site}wp-`)) return;
 	var sty =
-			"text-align:center;position:fixed;z-index:100;top:0;left:0;opacity:1;transition:opacity 0.5s linear;width:100%;",
+		"text-align:center;position:fixed;z-index:100;top:0;left:0;opacity:1;transition:opacity 0.5s linear;width:100%;",
 		inn = [
 			'<div style="display:inline-block;box-shadow:0 0 3px gray;padding:3px 5px;border-radius:5px;font-size:12px;font-family:sans-serif;line-height:20px;background:#fff;max-width:80%;margin-top:5px;"><span style="margin-right:5px;color:orange;"><i class="fa fa-exclamation-circle"></i></span><span>',
 			"</span></div>",
@@ -17,8 +17,19 @@
 			"检测到移动设备，为节省资源，未启用个性化外观",
 			"个性化外观正在后台加载",
 		],
-		ver = "master",
+		ver = "2.0",
+		pre = `https://cdn.jsdelivr.net/gh/littlestar520521/wordpress-tool-package@${ver}/publish/combine/dist/`,
 		loadRes = function () {
+			var c = document.createElement('link');
+			c.rel = "stylesheet";
+			c.href = `${pre}extra.min.css`;
+			var s = document.createElement("script");
+			s.src = `${pre}extra.min.js`;
+			s.async = true;
+			document.head.appendChild(c);
+			document.body.appendChild(s);
+		}
+		/* loadRes = function () {
 			var s1 = document.createElement("script");
 			s1.src =
 				"https://cdn.jsdelivr.net/gh/xb2016/kratos-pjax@0.3.6/static/js/live2d.js";
@@ -29,16 +40,16 @@
 				document.body.appendChild(s2);
 			};
 			document.body.appendChild(s1);
-		};
+		}; */
 	tip.setAttribute("style", sty);
 	if (/iPad|iPhone|Android/.test(u)) {
 		tip.innerHTML = inn.join(text[0]);
 		document.body.appendChild(tip);
-		document
-			.getElementById("day-night-theme-image")
-			.setAttribute("src", logo);
 		document.body.style.backgroundColor = "lightyellow";
 		document.body.style.setProperty("--article-bg-color", "#fff");
+		document.getElementById("day-night-theme-image").setAttribute("src", logo);
+		document.getElementById('customize-toolbar').classList.add('customize-mobile-hidden');
+		document.getElementById('customize-article-navigator').classList.add('customize-mobile-hidden');
 	} else {
 		tip.innerHTML = inn.join(text[1]);
 		document.body.appendChild(tip);
