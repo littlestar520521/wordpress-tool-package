@@ -350,7 +350,10 @@
 	}
 })(customizeThemeOpt);
 (function (n) {
-    if (typeof n == "undefined") return;
+	if (n == "") {
+		document.getElementById("customize-article-navigator").classList.add('customize-mobile-hidden');
+		return;
+	}
     var anRoot = document.getElementById("customize-article-navigator"),
         blockArea = document.querySelector(".an-block-container"),
         blockAreaCon = blockArea.parentElement,
@@ -626,4 +629,8 @@
         };
     an.navListRender(n);
     an.scrollBar();
-}(navData))
+}(
+	function () {
+		return typeof navData == "undefined" ? "" : navData;
+	}()
+))
