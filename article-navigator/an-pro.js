@@ -118,11 +118,13 @@
                 var sizeObj = this.coreSizeValue();
                 sizeObj.update();
                 var temps = {
+                    m: 0,
                     y: 0,
                     d: sizeObj.bar.con - sizeObj.bar.self,
                     wob: 0,
                     rt: 0,
-                    rc: false
+                    rc: false,
+                    f: false,
                 };
                 function getBlocksMoveLength(move) {
                     return (
@@ -208,6 +210,17 @@
                     }
                     reLayout();
                 }
+                function moveHandler(e) {
+                    if (e.clientY > temps.m) {
+                        temps.y + (e.clientY - temps.m) <= temps.d ? temps.y += (e.clientY - temps.m) : temps.y = temps.d;
+                    }
+                    else {
+                        temps.y - (temps.m - e.clientY) >= 0 ? temps.y -= (temps.m - e.clientY) : temps.y = 0;
+                    }
+                    temps.m = e.clientY;
+                    setScrollBarPos(temps.y);
+                    setBlocksAreaPos(temps.y);
+                }
                 blockArea.addEventListener("wheel", function (e) {
                     scrollBarCon.classList.add(vClass[3]);
                     if (temps.wob) {
@@ -221,6 +234,16 @@
                 });
                 scrollBarCon.addEventListener("wheel", function (e) {
                     wheelHandler(e);
+                });
+                scrollBar.addEventListener("mousedown", function (e) {
+                    temps.m = e.clientY;
+                    temps.f = true;
+                });
+                scrollBar.addEventListener("mousemove", function (e) {
+                    if (temps.f) moveHandler(e);
+                });
+                scrollBar.addEventListener("mouseup", function () {
+                    temps.f = false;
                 });
                 document.querySelector(".bottom-cube-front>div").addEventListener("click", function () {
                     if (isNavVisible()) {

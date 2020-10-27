@@ -160,11 +160,11 @@ sizeObj.update();
  */
 var temps = {
 	/**
-	 * last wheel time
+	 * last cursor clientY value
 	 */
-	t: 0,
+	m: 0,
 	/**
-	 * total deltaY value
+	 * total scroll bar moved length
 	 */
 	y: 0,
 	/**
@@ -182,7 +182,11 @@ var temps = {
 	/**
 	 * indicate that if the window is resized when the navigator is closed
 	 */
-	rc: false
+	rc: false,
+	/**
+	 * indicate that if mousedown event is triggered
+	 */
+	f: false,
 };
 
 /**
@@ -312,9 +316,25 @@ function resizeHandler() {
 	}
 	reLayout();
 }
+/**
+ * mousemove event handler
+ * @param {MouseEvent} e
+ */
+function moveHandler(e) {
+	//move down
+	if (e.clientY > temps.m) {
+		temps.y + (e.clientY - temps.m) <= temps.d ? temps.y += (e.clientY - temps.m) : temps.y = temps.d;
+	}
+	//move up
+	else {
+		temps.y - (temps.m - e.clientY) >= 0 ? temps.y -= (temps.m - e.clientY) : temps.y = 0;
+	}
+	temps.m = e.clientY;
+	setScrollBarPos(temps.y);
+	setBlocksAreaPos(temps.y);
+}
 blockArea.addEventListener("wheel", function (e) {
 	scrollBarCon.classList.add(vClass[3]);
-	//temps.t = new Date().getTime();
 	if (temps.wob) {
 		clearTimeout(temps.wob);
 	}
@@ -326,6 +346,16 @@ blockArea.addEventListener("wheel", function (e) {
 });
 scrollBarCon.addEventListener("wheel", function (e) {
 	wheelHandler(e);
+});
+scrollBar.addEventListener("mousedown", function (e) {
+	temps.m = e.clientY;
+	temps.f = true;
+});
+scrollBar.addEventListener("mousemove", function (e) {
+	if (temps.f) moveHandler(e);
+});
+scrollBar.addEventListener("mouseup", function () {
+	temps.f = false;
 });
 //TODO:how to check whether the wheel event is triggered?
 /* blockAreaCon.addEventListener("mouseover", function () {
@@ -349,7 +379,7 @@ document.querySelector(".bottom-cube-front>div").addEventListener("click", funct
 		closeNavigator();
 	}
 	//show it if has both 'an-hide-all' and 'an-close-side' class
-	else if (!isNavVisible()) {
+	else {
 		showNavigator();
 		//if the window has been resized, relayout the blocks area and scroll bar
 		if (temps.rc) {
