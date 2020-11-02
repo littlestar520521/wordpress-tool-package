@@ -1,25 +1,3 @@
-html,
-body,
-div,
-span,
-ul,
-li,
-a {
-	margin: 0;
-	padding: 0;
-}
-a {
-	text-decoration: none;
-}
-body,
-html {
-	width: 100%;
-	height: 100%;
-}
-body {
-	background: url(../../Assets/bg/2020-09-03-183452.jpg) center;
-	background-size: cover;
-}
 #customize-article-navigator {
 	font-family: sans-serif;
 	letter-spacing: 1px;

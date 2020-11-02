@@ -334,6 +334,8 @@ function moveHandler(e) {
 	setBlocksAreaPos(temps.y);
 }
 blockArea.addEventListener("wheel", function (e) {
+	e.cancelable ? e.preventDefault() : {};
+	e.stopPropagation();
 	scrollBarCon.classList.add(vClass[3]);
 	if (temps.wob) {
 		clearTimeout(temps.wob);
@@ -343,10 +345,12 @@ blockArea.addEventListener("wheel", function (e) {
 		temps.wob = 0;
 	}, 2000);
 	wheelHandler(e);
-});
+}, { passive: false });
 scrollBarCon.addEventListener("wheel", function (e) {
+	e.cancelable ? e.preventDefault() : {};
+	e.stopPropagation();
 	wheelHandler(e);
-});
+}, { passive: false });
 scrollBar.addEventListener("mousedown", function (e) {
 	temps.m = e.clientY;
 	temps.f = true;

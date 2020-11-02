@@ -634,3 +634,5 @@
 		return typeof navData == "undefined" ? "" : navData;
 	}()
 ))
+//TODO: 页面类型的post中不需要显示、添加导航项目繁琐
+//FIXME: nav列表为空时div盒子显示异常、滚动滚动条时窗口也跟着滚动、对不存在的DOM执行方法引发异常
