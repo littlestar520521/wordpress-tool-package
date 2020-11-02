@@ -61,13 +61,17 @@ const nav3 = {
              * 块级标题
              */
             title: {
-                n: '1-2',
-                c: '潜入饭店（新田浩介篇）'
+                n: '1-3',//number
+                c: '潜入饭店（新田浩介篇）'//content
             },
             /**
              * 列表项
              */
-            list: ['1', '2']
+            list: ['1', '2', '3'],
+            list_0: ['1-1', '1-2', '1-3'],
+            list_1: [1, 2, 3],
+            list_2: { s: 1, e: 3 },//start:xx,end:xx
+            list_3: { s: '1-1', e: '1-11' },//start:1-1,end:1-11
         },
     ]
 };
@@ -98,8 +102,8 @@ const nav3_1 = {
              */
             list: [
                 {
-                    t: 'Server Part',
-                    m: 'server-security'
+                    t: 'Server Part',//title
+                    m: 'server-security'//html mark
                 },
                 {
                     t: 'Client Part',

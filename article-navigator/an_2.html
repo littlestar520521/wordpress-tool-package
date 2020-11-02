@@ -8,9 +8,21 @@
 		<link
 			rel="stylesheet"
 			href="../includes/font-awesome-4.7.0/css/font-awesome.min.css"
-		/>
+        />
+        <style>
+            html,body,div,span,ul,li,a{margin:0;padding:0;}
+            a{text-decoration:none;}
+            body{background:url(../../Assets/bg/2020-09-03-183452.jpg)no-repeat center;background-size:cover;background-attachment:fixed}
+            #test{width:50%;height:200vh;margin-left:50%;background-color:rgba(0,0,0,0.5);position:relative;text-align:center;font-family:Calibri;}
+            #test>div:first-child{position:absolute;top:0;width:100%;color:#333;background:azure;}
+            #test>div:last-child{position:absolute;bottom:0;width:100%;color:#333;background:azure;}
+        </style>
 	</head>
 	<body>
+        <div id="test">
+            <div>start</div>
+            <div>end</div>
+        </div>
 		<div id="customize-article-navigator" class="an-show-all">
             <div class="an-top an-pseudo-el-layer">
                 <div class="an-title-animation"><i class="fa fa-moon-o"></i></div>
@@ -165,38 +177,38 @@
                 data: [
                     {
                         title: {
+                            n: '3-5',
+                            c: '潜入饭店（山岸尚美篇）'
+                        },
+                        list: {s:3,e:5}
+                    },
+                    {
+                        title: {
                             n: '1-2',
                             c: '潜入饭店（新田浩介篇）'
                         },
                         list: ['1', '2']
+                    },
+                    {
+                        title: {
+                            n: '1-2',
+                            c: '潜入饭店（新田浩介篇）'
+                        },
+                        list: ['1-1', '1-2']
                     },
                     {
                         title: {
                             n: '3-5',
                             c: '潜入饭店（山岸尚美篇）'
                         },
-                        list: ['3', '4', '5']
-                    },
-                    {
-                        title: {
-                            n: '1-2',
-                            c: '潜入饭店（新田浩介篇）'
-                        },
-                        list: ['1', '2']
-                    },
-                    {
-                        title: {
-                            n: '1-2',
-                            c: '潜入饭店（新田浩介篇）'
-                        },
-                        list: ['1', '2']
+                        list: [3,4,5]
                     },
                     {
                         title: {
                             n: '3-5',
                             c: '潜入饭店（山岸尚美篇）'
                         },
-                        list: ['3', '4', '5']
+                        list: {s:'3-1',e:'3-7'}
                     },
                 ]
             }

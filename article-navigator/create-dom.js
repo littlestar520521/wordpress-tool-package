@@ -1,29 +1,44 @@
-const nav = {
-    /**
-     * 块级标题单位
-     */
+const navData = {
     ut: '章',
-    /**
-     * 列表项内容单位，可没有
-     */
     un: '章',
     data: [
         {
-            /**
-             * 块级标题
-             */
+            title: {
+                n: '3-5',
+                c: '潜入饭店（山岸尚美篇）'
+            },
+            list: {s:3,e:5}
+        },
+        {
             title: {
                 n: '1-2',
                 c: '潜入饭店（新田浩介篇）'
             },
-            /**
-             * 列表项
-             */
             list: ['1', '2']
         },
+        {
+            title: {
+                n: '1-2',
+                c: '潜入饭店（新田浩介篇）'
+            },
+            list: ['1-1', '1-2']
+        },
+        {
+            title: {
+                n: '3-5',
+                c: '潜入饭店（山岸尚美篇）'
+            },
+            list: [3,4,5]
+        },
+        {
+            title: {
+                n: '3-5',
+                c: '潜入饭店（山岸尚美篇）'
+            },
+            list: {s:'3-1',e:'3-7'}
+        },
     ]
-};
-
+}
 /**
  * content unit
  */
@@ -40,7 +55,7 @@ var u_en = function getUnit(u_zh) {
         case '部分': return unit[3];
         default: return '';
     }
-}(nav.un);
+}(navData.un);
 /**
  * create block div
  * @param {string} p1 
@@ -50,33 +65,85 @@ var u_en = function getUnit(u_zh) {
 function createChildDiv(p1, p2, p3) {
     var ch = document.createElement('div');
     ch.setAttribute('class', 'an-block');
-    ch.innerHTML = `<div><div class="an-block-title"><div class="block-title-pre"><div class="block-title-pre-in"><span><i class="fa fa-leaf" aria-hidden="true"></i></span><div><span>第</span><span>${p1}</span><span>${nav.ut}</span></div><span><i class="fa fa-angle-down" aria-hidden="true"></i></span></div></div><div class="title-content">${p2}</div></div><ul class="an-nav">${p3}</ul></div>`;
+    ch.innerHTML = `<div><div class="an-block-title"><div class="block-title-pre"><div class="block-title-pre-in"><span><i class="fa fa-leaf" aria-hidden="true"></i></span><div><span>第</span><span>${p1}</span><span>${navData.ut}</span></div><span><i class="fa fa-angle-down" aria-hidden="true"></i></span></div></div><div class="title-content">${p2}</div></div><ul class="an-nav">${p3}</ul></div>`;
     blockArea.appendChild(ch);
 }
 /**
  * create nav inner li string
- * @param {Array<{t:string, m:string}>|Array<string>} list nav list data
+ * @param {Array<string>|Array<number>} list nav list data
+ * @param {string} unit
  */
-function createLiString(list) {
+function createLiStringWithArray(list, unit) {
     var str = '';
-    if (u_en && typeof list[0] == 'string') {
+    if (u_en) {
         list.forEach(function (item) {
-            str = str.concat(`<li><a href="#${u_en.concat(item)}">第${item.concat(nav.un)}</a></li>`);
+            str = str.concat(`<li><a href="#${u_en.concat(item)}">第${item.toString().concat(unit)}</a></li>`);
         })
     }
-    else if (!u_en && typeof list[0] == 'object') {
-        var ks = Object.keys(list[0]);
-        if (ks.includes('m') && ks.includes('t')) {
-            list.forEach(function (item) {
-                str = str.concat(`<li><a href="#${item.m}">${item.t}</a></li>`);
-            })
+    return str;
+}
+/**
+ * create nav inner li string
+ * @param {Array<{t:string, m:string}>} list nav list data
+ */
+function createLiStringWithObjArray(list) {
+    var str = '',
+        ks = Object.keys(list[0]);
+    if (ks.includes('m') && ks.includes('t')) {
+        list.forEach(function (item) {
+            str = str.concat(`<li><a href="#${item.m}">${item.t}</a></li>`);
+        })
+    }
+    return str;
+}
+/**
+ * create nav inner li string with given start-end number and item unit
+ * @param {{s:number, e:number}|{s:string, e:string}} list 
+ * @param {string} unit
+ */
+function createLiStringWithObj(list, unit) {
+    var ks = Object.keys(list),
+        str = '';
+    if (u_en && ks.includes('s') && ks.includes('e')) {
+        //e.g. start:1, end:11
+        if (typeof list.s == 'number' && typeof list.e == 'number') {
+            for (var i = list.s; i <= list.e; i++) {
+                str = str.concat(`<li><a href="#${u_en.concat(i)}">第${i.toString().concat(unit)}</a></li>`);
+            }
+        }
+        //e.g. start:3-5, end:3-9
+        else if (typeof list.s == 'string' && typeof list.e == 'string') {
+            var start = list.s.split('-'),
+                end = list.e.split('-');
+            if (start.length > 0 && end.length > 0) {
+                var pre = start[0].concat('-');
+                for (var i = start[1]; i <= end[1]; i++) {
+                    str = str.concat(`<li><a href="#${u_en.concat(pre.concat(i))}">第${pre.concat(i).concat(unit)}</a></li>`);
+                }
+            }
         }
     }
     return str;
 }
+function createLiString(list, unit) {
+    if (list instanceof Array) {
+        if (typeof list[0] == 'number' || typeof list[0] == 'string') {
+            return createLiStringWithArray(list, unit);
+        }
+        else if (typeof list[0] == 'object') {
+            return createLiStringWithObjArray(list);
+        }
+    }
+    else if (typeof list == 'object' && !(list instanceof Array)) {
+        return createLiStringWithObj(list, unit);
+    }
+    else {
+        return '';
+    }
+}
 
-nav.data.forEach(function (item) {
-    createChildDiv(item.title.n, item.title.c, createLiString(item.list));
+navData.data.forEach(function (item) {
+    createChildDiv(item.title.n, item.title.c, createLiString(item.list, navData.un));
 })
 
 var div_hack = document.createElement('div');
