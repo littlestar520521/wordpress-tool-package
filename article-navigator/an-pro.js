@@ -140,12 +140,10 @@
                             return createLiStringWithObjArray(list);
                         }
                     }
-                    else if (typeof list == 'object' && !(list instanceof Array)) {
-                        return createLiStringWithObj(list, unit);
+                    else if (typeof list == 'object') {
+                        return list == null ? '' : createLiStringWithObj(list, unit);
                     }
-                    else {
-                        return '';
-                    }
+                    return '';
                 }
                 nav.data.forEach(function (item) {
                     createChildDiv(item.title.n, item.title.c, createLiString(item.list, nav.un));

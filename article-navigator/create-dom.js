@@ -134,12 +134,10 @@ function createLiString(list, unit) {
             return createLiStringWithObjArray(list);
         }
     }
-    else if (typeof list == 'object' && !(list instanceof Array)) {
-        return createLiStringWithObj(list, unit);
+    else if (typeof list == 'object') {
+        return list == null ? '' : createLiStringWithObj(list, unit);
     }
-    else {
-        return '';
-    }
+    return '';
 }
 
 navData.data.forEach(function (item) {
